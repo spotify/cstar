@@ -25,7 +25,7 @@ import cstar.remote
 import cstar.jobreader
 from cstar.output import msg, error, emph
 import cstar.output
-from cstar.exceptions import BadFileFormatVersion, FileTooOld,NoHostsSpecified
+from cstar.exceptions import NoHostsSpecified
 import cstar.signalhandler
 import cstar.jobrunner
 import cstar.cleanup
@@ -44,26 +44,6 @@ def get_commands():
         sub = cstar.command.load(name)
         result[name] = sub
     return result
-
-
-def execute_continue(args):
-    with cstar.job.Job() as job:
-        try:
-            cstar.jobreader.read(job, args.job_id, args.stop_after, max_days=args.max_job_age,
-                                 output_directory=args.output_directory)
-        except (FileTooOld, BadFileFormatVersion) as e:
-            error(e)
-        msg("Resuming job", job.job_id)
-        msg("Running ", job.command)
-
-        cstar.signalhandler.print_message_and_save_on_sigint(job, job.job_id)
-
-        job.resume()
-
-
-def execute_cleanup(args):
-    msg('Cleaning up old jobs')
-    cstar.cleanup.cleanup(args.max_job_age)
 
 
 def execute_command(args):
@@ -112,7 +92,7 @@ def execute_command(args):
 
 
 def main():
-    parser = cstar.args.get_cstar_parser(get_commands(), execute_command, execute_continue, execute_cleanup)
+    parser = cstar.args.get_cstar_parser(get_commands(), execute_command)
 
     #no input
     if len(sys.argv) <= 1:

@@ -14,7 +14,6 @@
 
 import cstar.job
 import cstar.jobreader
-import cstar.exceptions
 import os
 import shutil
 
@@ -30,3 +29,15 @@ def cleanup(max_days, listdir=os.listdir, jobread=cstar.jobreader.read, delete=s
             msg("Removing job", job_id)
             full_name = os.path.join(job_dir, job_id)
             delete(full_name)
+
+
+def execute_cleanup(args):
+    msg('Cleaning up old jobs')
+    cleanup(args.max_job_age)
+
+
+def add_cleanup_subparser(subparsers, add_common_arguments, add_cstar_arguments_without_command):
+    cleanup_parser = subparsers.add_parser('cleanup-jobs', help='Cleanup old finished jobs and exit (*)')
+    cleanup_parser.set_defaults(func=execute_cleanup)
+    add_common_arguments(cleanup_parser)
+    add_cstar_arguments_without_command(cleanup_parser)
