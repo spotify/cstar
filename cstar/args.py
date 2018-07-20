@@ -70,23 +70,28 @@ def _add_cstar_arguments_without_command(parser):
     parser.add_argument('--max-job-age', default=7, type=int, help='Maximum age in days of a job to resume')
 
 
-def get_cstar_parser(commands, execute_command, execute_continue, execute_cleanup):
-    """Argument parsing cstar"""
-    parser = argparse.ArgumentParser(
-        description='cstar', prog='cstar', formatter_class=argparse.RawDescriptionHelpFormatter, epilog="(*): Special built-in cstar job management action")
-    subparsers = parser.add_subparsers(dest='sub_command')
-
+def _add_continue_subparser(subparsers, execute_continue):
     continue_parser = subparsers.add_parser('continue', help='Continue a previously created job (*)')
     continue_parser.set_defaults(func=execute_continue)
     continue_parser.add_argument('job_id')
     _add_common_arguments(continue_parser)
     _add_cstar_arguments_without_command(continue_parser)
 
+
+def _add_cleanup_subparser(subparsers, execute_cleanup):
     cleanup_parser = subparsers.add_parser('cleanup-jobs', help='Cleanup old finished jobs and exit (*)')
     cleanup_parser.set_defaults(func=execute_cleanup)
     _add_common_arguments(cleanup_parser)
     _add_cstar_arguments_without_command(cleanup_parser)
 
+
+def get_cstar_parser(commands, execute_command, execute_continue, execute_cleanup):
+    """Argument parsing cstar"""
+    parser = argparse.ArgumentParser(
+        description='cstar', prog='cstar', formatter_class=argparse.RawDescriptionHelpFormatter, epilog="(*): Special built-in cstar job management action")
+    subparsers = parser.add_subparsers(dest='sub_command')
+    _add_continue_subparser(subparsers, execute_continue)
+    _add_cleanup_subparser(subparsers, execute_cleanup)
     for (name, command) in commands.items():
         command_parser = subparsers.add_parser(name, help=command.description)
         for arg in command.arguments:
@@ -95,7 +100,6 @@ def get_cstar_parser(commands, execute_command, execute_continue, execute_cleanu
         _add_strategy_arguments(command_parser)
         _add_common_arguments(command_parser)
         command_parser.set_defaults(func=lambda args: execute_command(args), command=command)
-
     return parser
 
 
