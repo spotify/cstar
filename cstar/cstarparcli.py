@@ -14,7 +14,6 @@
 
 """Argument parsing and related plumbing for the cstarpar command"""
 
-import argparse
 import sys
 import uuid
 
@@ -35,18 +34,9 @@ def fallback(*args):
             return arg
 
 
-def parse_job_mode():
-    desc = '''cstarpar - A shell tool for executing jobs in parallel. Unlike cstar, cstarpar does not run commands
-    remotely, it executes a script locally once for each Cassandra host.'''
-    parser = argparse.ArgumentParser(description=desc,
-                                     prog="cstarpar")
-
-    cstar.args.add_cstarpar_arguments(parser)
-    return parser.parse_args()
-
-
 def main():
-    namespace = parse_job_mode()
+    parser = cstar.args.get_cstarpar_parser()
+    namespace = parser.parse_args()
 
     if bool(namespace.seed_host) + bool(namespace.host) + bool(namespace.host_file) != 1:
         error("Exactly one of --seed-host, --host and --host-file must be used", print_traceback=False)

@@ -14,7 +14,6 @@
 
 """Argument parsing and related plumbing for the cstar command"""
 
-import argparse
 import sys
 import uuid
 
@@ -113,9 +112,7 @@ def execute_command(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='cstar', prog='cstar', formatter_class=argparse.RawDescriptionHelpFormatter, epilog="(*): Special built-in cstar job management action")
-    cstar.args.add_cstar_arguments(parser, get_commands(), execute_command, execute_continue, execute_cleanup)
+    parser = cstar.args.get_cstar_parser(get_commands(), execute_command, execute_continue, execute_cleanup)
 
     #no input
     if len(sys.argv) <= 1:

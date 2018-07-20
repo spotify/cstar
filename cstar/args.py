@@ -14,6 +14,8 @@
 
 """Argument parsing"""
 
+import argparse
+
 
 def _add_common_arguments(parser):
     parser.add_argument('--stop-after', type=int, help='Stop the job after specified number of hosts')
@@ -68,8 +70,10 @@ def _add_cstar_arguments_without_command(parser):
     parser.add_argument('--max-job-age', default=7, type=int, help='Maximum age in days of a job to resume')
 
 
-def add_cstar_arguments(parser, commands, execute_command, execute_continue, execute_cleanup):
-    """Argument parsing for case when cstar is called specifying a command to run"""
+def get_cstar_parser(commands, execute_command, execute_continue, execute_cleanup):
+    """Argument parsing cstar"""
+    parser = argparse.ArgumentParser(
+        description='cstar', prog='cstar', formatter_class=argparse.RawDescriptionHelpFormatter, epilog="(*): Special built-in cstar job management action")
     subparsers = parser.add_subparsers(dest='sub_command')
 
     continue_parser = subparsers.add_parser('continue', help='Continue a previously created job (*)')
@@ -92,10 +96,16 @@ def add_cstar_arguments(parser, commands, execute_command, execute_continue, exe
         _add_common_arguments(command_parser)
         command_parser.set_defaults(func=lambda args: execute_command(args), command=command)
 
+    return parser
 
-def add_cstarpar_arguments(parser):
+
+def get_cstarpar_parser():
     """Argument parsing for cstarpar"""
+    desc = '''cstarpar - A shell tool for executing jobs in parallel. Unlike cstar, cstarpar does not run commands
+    remotely, it executes a script locally once for each Cassandra host.'''
+    parser = argparse.ArgumentParser(description=desc, prog="cstarpar")
     _add_destination_arguments(parser)
     _add_common_arguments(parser)
     _add_strategy_arguments(parser)
     parser.add_argument('command', help='Command to run once for each Cassandra host')
+    return parser
