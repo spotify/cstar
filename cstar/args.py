@@ -16,6 +16,7 @@
 
 import argparse
 
+import cstar.command
 import cstar.cont
 import cstar.cleanup
 
@@ -73,7 +74,7 @@ def _add_cstar_arguments_without_command(parser):
     parser.add_argument('--max-job-age', default=7, type=int, help='Maximum age in days of a job to resume')
 
 
-def get_cstar_parser(commands, execute_command):
+def get_cstar_parser(commands):
     """Argument parsing cstar"""
     parser = argparse.ArgumentParser(
         description='cstar', prog='cstar', formatter_class=argparse.RawDescriptionHelpFormatter, epilog="(*): Special built-in cstar job management action")
@@ -87,7 +88,7 @@ def get_cstar_parser(commands, execute_command):
         _add_destination_arguments(command_parser)
         _add_strategy_arguments(command_parser)
         _add_common_arguments(command_parser)
-        command_parser.set_defaults(func=execute_command, command=command)
+        command_parser.set_defaults(func=cstar.command.execute_command, command=command)
     return parser
 
 
