@@ -42,7 +42,7 @@ echo hopp $SNAPSHOT_NAME
 class CommandTest(unittest.TestCase):
 
     def test_list_dedup(self):
-        res = cstar.command.list(listdir=lambda x: example_dir_data[x], stat=lambda x: 0, check_is_file=lambda x: True)
+        res = cstar.command.list_commands(listdir=lambda x: example_dir_data[x], stat=lambda x: 0, check_is_file=lambda x: True)
         self.assertEqual(sorted(res), sorted(("foo", "bar", "baz", "qux")))
 
     def test_search_correct_order(self):

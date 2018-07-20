@@ -113,13 +113,13 @@ def _search(name, listdir=os.listdir, stat=os.stat, check_is_file=_stat_is_reg):
     raise FileNotFoundError("Failed to find definition for command %s" % (name,))
 
 
-def list(listdir=os.listdir, stat=os.stat, check_is_file=_stat_is_reg):
+def list_commands(listdir=os.listdir, stat=os.stat, check_is_file=_stat_is_reg):
     return _list(listdir, stat, check_is_file).keys()
 
 
 def get_commands():
     result = {}
-    names = list()
+    names = list_commands()
     for name in sorted(names):
         sub = load(name)
         result[name] = sub
