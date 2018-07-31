@@ -1,0 +1,5 @@
+Schema Version:abc123-abcd-1234-1234-123456789abc
+TokenRange:
+    TokenRange(start_token:-9223372036854775808, end_token:-3074457345618258603, endpoints:[1.2.3.4, 2.3.4.5, 3.4.5.6], rpc_endpoints:[1.2.3.4, 2.3.4.5, 3.4.5.6], endpoint_details:[EndpointDetails(host:1.2.3.4, datacenter:gew, rack:rac1), EndpointDetails(host:2.3.4.5, datacenter:gew, rack:rac1), EndpointDetails(host:3.4.5.6, datacenter:gew, rack:rac1)])
+    TokenRange(start_token:-3074457345618258603, end_token:3074457345618258602, endpoints:[2.3.4.5, 3.4.5.6, 1.2.3.4], rpc_endpoints:[2.3.4.5, 3.4.5.6, 1.2.3.4], endpoint_details:[EndpointDetails(host:2.3.4.5, datacenter:gew, rack:rac1), EndpointDetails(host:3.4.5.6, datacenter:gew, rack:rac1), EndpointDetails(host:1.2.3.4, datacenter:gew, rack:rac1)])
+    TokenRange(start_token:3074457345618258602, end_token:-9223372036854775808, endpoints:[3.4.5.6, 1.2.3.4, 2.3.4.5], rpc_endpoints:[3.4.5.6, 1.2.3.4, 2.3.4.5], endpoint_details:[EndpointDetails(host:3.4.5.6, datacenter:gew, rack:rac1), EndpointDetails(host:1.2.3.4, datacenter:gew, rack:rac1), EndpointDetails(host:2.3.4.5, datacenter:gew, rack:rac1)])

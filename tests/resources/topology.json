@@ -1,0 +1,317 @@
+[
+  {
+    "endpoints": [
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "3074457345618258603",
+    "startToken": "3074457345618258602"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "3074457345618258602",
+    "startToken": "-3074457345618258599"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-9223372036854775805",
+    "startToken": "-9223372036854775806"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "3074457345618258604",
+    "startToken": "3074457345618258603"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-3074457345618258599",
+    "startToken": "-3074457345618258600"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-3074457345618258600",
+    "startToken": "-3074457345618258601"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-9223372036854775806",
+    "startToken": "-9223372036854775807"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-3074457345618258603",
+    "startToken": "-9223372036854775804"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-3074457345618258602",
+    "startToken": "-3074457345618258603"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-9223372036854775804",
+    "startToken": "-9223372036854775805"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "3074457345618258605",
+    "startToken": "3074457345618258604"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "3074457345618258606",
+    "startToken": "3074457345618258605"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-9223372036854775807",
+    "startToken": "-9223372036854775808"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-3074457345618258601",
+    "startToken": "-3074457345618258602"
+  },
+  {
+    "endpoints": [
+      "cassandra-node-a-4k79.example.com",
+      "cassandra-node-a6233.example.com",
+      "cassandra-node-a-qz36.example.com",
+      "cassandra-node-a1629.example.com",
+      "cassandra-node-a2772.example.com",
+      "cassandra-node-a-mqvb.example.com",
+      "cassandra-node-a-243r.example.com",
+      "cassandra-node-a-cdr6.example.com",
+      "cassandra-node-a6906.example.com",
+      "cassandra-node-a3577.example.com",
+      "cassandra-node-a-r3r4.example.com",
+      "cassandra-node-a-rzmz.example.com",
+      "cassandra-node-a4992.example.com",
+      "cassandra-node-a-7q9q.example.com",
+      "cassandra-node-a-0wx3.example.com"
+    ],
+    "endToken": "-9223372036854775808",
+    "startToken": "3074457345618258606"
+  }
+]

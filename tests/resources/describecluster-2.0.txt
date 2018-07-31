@@ -1,0 +1,6 @@
+Cluster Information:
+    Name: c2.0.13
+    Snitch: org.apache.cassandra.locator.DynamicEndpointSnitch
+    Partitioner: org.apache.cassandra.dht.Murmur3Partitioner
+    Schema versions:
+        08428c1c-086b-322c-ae61-988129270360: [127.0.0.1, 127.0.0.2, 127.0.0.3]

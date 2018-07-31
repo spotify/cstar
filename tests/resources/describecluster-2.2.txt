@@ -1,0 +1,6 @@
+Cluster Information:
+	Name: fnorp
+	Snitch: org.apache.cassandra.locator.DynamicEndpointSnitch
+	Partitioner: org.apache.cassandra.dht.Murmur3Partitioner
+	Schema versions:
+		abc-123: [1.2.3.4 2.3.4.5 3.4.5.6]

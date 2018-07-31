@@ -1,0 +1,10 @@
+.idea
+*.iml
+*.lock
+*.pyc
+.eggs
+build
+cstar.egg-info
+dist
+*~
+venv

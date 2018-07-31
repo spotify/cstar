@@ -1,0 +1,77 @@
+{
+  "cassandra-node-a-0wx3.example.com": {
+    "dc": "gae",
+    "token": "-9223372036854775806",
+    "state": "live"
+  },
+  "cassandra-node-a-7q9q.example.com": {
+    "dc": "guc",
+    "token": "-3074457345618258600",
+    "state": "live"
+  },
+  "cassandra-node-a4992.example.com": {
+    "dc": "ash",
+    "token": "-3074457345618258602",
+    "state": "live"
+  },
+  "cassandra-node-a-rzmz.example.com": {
+    "dc": "gew",
+    "token": "-3074457345618258603",
+    "state": "live"
+  },
+  "cassandra-node-a-r3r4.example.com": {
+    "dc": "gew",
+    "token": "3074457345618258602",
+    "state": "live"
+  },
+  "cassandra-node-a3577.example.com": {
+    "dc": "lon",
+    "token": "-3074457345618258599",
+    "state": "live"
+  },
+  "cassandra-node-a6906.example.com": {
+    "dc": "lon",
+    "token": "3074457345618258606",
+    "state": "live"
+  },
+  "cassandra-node-a-4k79.example.com": {
+    "dc": "gae",
+    "token": "-3074457345618258601",
+    "state": "live"
+  },
+  "cassandra-node-a6233.example.com": {
+    "dc": "ash",
+    "token": "3074457345618258603",
+    "state": "live"
+  },
+  "cassandra-node-a-qz36.example.com": {
+    "dc": "gew",
+    "token": "-9223372036854775808",
+    "state": "live"
+  },
+  "cassandra-node-a1629.example.com": {
+    "dc": "ash",
+    "token": "-9223372036854775807",
+    "state": "live"
+  },
+  "cassandra-node-a2772.example.com": {
+    "dc": "lon",
+    "token": "-9223372036854775804",
+    "state": "live"
+  },
+  "cassandra-node-a-mqvb.example.com": {
+    "dc": "gae",
+    "token": "3074457345618258604",
+    "state": "live"
+  },
+  "cassandra-node-a-243r.example.com": {
+    "dc": "guc",
+    "token": "-9223372036854775805",
+    "state": "live"
+  },
+  "cassandra-node-a-cdr6.example.com": {
+    "dc": "guc",
+    "token": "3074457345618258605",
+    "state": "live"
+  }
+}
