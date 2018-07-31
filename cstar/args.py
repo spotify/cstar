@@ -101,4 +101,5 @@ def get_cstarpar_parser():
     _add_common_arguments(parser)
     _add_strategy_arguments(parser)
     parser.add_argument('command', help='Command to run once for each Cassandra host')
+    parser.set_defaults(func=cstar.?)
     return parser
