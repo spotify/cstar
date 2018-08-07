@@ -111,6 +111,7 @@ jobs:
           command: |
             . venv/bin/activate
             twine upload -r test dist/*
+            twine upload -r pypi dist/*
 
 workflows:
   version: 2

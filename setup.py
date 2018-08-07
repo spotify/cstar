@@ -20,7 +20,7 @@ import os
 import sys
 
 # circleci.py version
-VERSION = '0.0.7'
+VERSION = '0.0.8'
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
