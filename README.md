@@ -88,7 +88,7 @@ The possible keys are:
 
 `cluster-parallelism`, can the script be run on multiple clusters in parallel. Default value is true.  
 
-`dc-parallelism`, can the script be run on data centers in the same cluster. Default value is false.
+`dc-parallelism`, can the script be run on multiple data centers in the same cluster in parallel. Default value is false.
 
 `strategy`, how many nodes within one data center can the script be run on. Default is `topology`.
 Can be one of:
