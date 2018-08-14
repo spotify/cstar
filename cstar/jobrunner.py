@@ -47,12 +47,15 @@ class RemoteJobRunner(object):
     This JobRunner is used by cstar
     """
 
-    def __init__(self, job, host):
+    def __init__(self, job, host, ssh_username=None, ssh_password=None, ssh_identity_file=None):
         self.job = job
         self.host = host
+        self.ssh_username = ssh_username
+        self.ssh_password = ssh_password
+        self.ssh_identity_file = ssh_identity_file
 
     def __call__(self):
-        with cstar.remote.Remote(self.host) as conn:
+        with cstar.remote.Remote(self.host, self.ssh_username, self.ssh_password, self.ssh_identity_file) as conn:
             result = conn.run_job(self.job.command, self.job.job_id, self.job.timeout, self.job.env)
             self.job.results.put((self.host, result))  # This signals the main thread that the job completed.
             save_output(self.job, self.host, result)
