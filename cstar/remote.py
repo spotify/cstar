@@ -15,7 +15,7 @@
 import paramiko.client
 import re
 
-from cstar.output import err, debug
+from cstar.output import err, debug, msg
 from cstar.exceptions import BadSSHHost, BadEnvironmentVariable, NoHostsSpecified
 from cstar.executionresult import ExecutionResult
 
@@ -25,13 +25,16 @@ _alnum_re = re.compile(r"[^a-zA-Z0-9\|_]")
 
 
 class Remote(object):
-    def __init__(self, hostname):
+    def __init__(self, hostname, ssh_username=None, ssh_password=None, ssh_identity_file=None):
         if hasattr(hostname, "ip"):
             self.hostname = hostname.ip
         else:
             self.hostname = hostname
         if not self.hostname:
             raise NoHostsSpecified("No SSH host specified")
+        self.ssh_username = ssh_username
+        self.ssh_password = ssh_password
+        self.ssh_identity_file = ssh_identity_file
         self.client = None
 
     def __enter__(self):
@@ -53,8 +56,13 @@ class Remote(object):
         if not self.client:
             try:
                 self.client = paramiko.client.SSHClient()
+                pkey = None
+                if self.ssh_identity_file != None:
+                    pkey = paramiko.RSAKey.from_private_key_file(self.ssh_identity_file, None)
+                debug("Username : ", self.ssh_username)
+                debug("Id file: ", self.ssh_identity_file)
                 self.client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
-                self.client.connect(self.hostname, compress=True)
+                self.client.connect(self.hostname, compress=True, username=self.ssh_username, password=self.ssh_password, pkey=pkey)
             except:
                 self.client = None
                 raise BadSSHHost("Could not establish an SSH connection to host %s" % (self.hostname,))
