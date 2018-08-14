@@ -18,7 +18,7 @@ solution.
 ## Requirements
 
 All involved machines are assumed to be some sort of UNIX-like system like OS X or Linux. The machine
-running cstar must have python3, the Cassandra hosts must hava a Bourne style shell.
+running cstar must have python3, the Cassandra hosts must have a Bourne style shell.
 
 ## Installing
 
@@ -86,14 +86,14 @@ the script, e.g. `# C* dc-parallel: true`
 
 The possible keys are:
 
-`cluster-parallelism`, can the script be run on multiple clusters in parallel. Default value is true.  
+`cluster-parallelism`, can the script be run on multiple clusters in parallel. Default value is `true`.  
 
-`dc-parallelism`, can the script be run on data centers in the same cluster. Default value is false.
+`dc-parallelism`, can the script be run on data centers in the same cluster. Default value is `false`.
 
 `strategy`, how many nodes within one data center can the script be run on. Default is `topology`.
 Can be one of:
 
-*  `one`, only one node per data center
+* `one`, only one node per data center
 * `topology`, inspect topology and run on as many nodes as the topology allows
 * `all`, can be run on all nodes at once
 
@@ -124,7 +124,7 @@ Cstar jobs are run nohuped, this means that even if the ssh connection is severe
 In order to kill a cstar script invocation on a specific host, you will need ssh to the host and kill
 the proccess.
 
-If a job is halted half-way, either by presing ^C or by using the --stop-after paramenter, it can be
+If a job is halted half-way, either by pressing `^C` or by using the `--stop-after` parameter, it can be
 restarted using `cstar continue <JOB_ID>`. If the script was finished or already running when cstar
 shut down, it will not be rerun.
 
@@ -161,7 +161,7 @@ The job id is the first line written on any executed job.
 
 ## Example script file
 
-This is an example script file that would saved to ~/.cstar/commands/puppet-upgrade-cassandra.sh. It upgrades a 
+This is an example script file that would saved to `~/.cstar/commands/puppet-upgrade-cassandra.sh`. It upgrades a 
 Cassandra cluster by running puppet on a different branch, then restarting the node, then upgrading the sstables.
 
     # !/usr/bin/env bash
