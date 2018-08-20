@@ -1,5 +1,8 @@
 # cstar
 
+[![CircleCI](https://circleci.com/gh/spotify/cstar/tree/master.svg?style=shield)](https://circleci.com/gh/spotify/cstar)
+[![License](https://img.shields.io/github/license/spotify/cstar.svg)](LICENSE)
+
 `cstar` is an Apache Cassandra cluster orchestration tool for the command line.
 
 ## Why not simply use Ansible or Fabric?
