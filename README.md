@@ -5,6 +5,8 @@
 
 `cstar` is an Apache Cassandra cluster orchestration tool for the command line.
 
+[![asciicast](https://asciinema.org/a/BJkHpAGCdkSXTAhYf7bPVmerz.png)](https://asciinema.org/a/BJkHpAGCdkSXTAhYf7bPVmerz?autoplay=1)
+
 ## Why not simply use Ansible or Fabric?
 
 Ansible does not have the primitives required to run things in a topology aware fashion. One could
