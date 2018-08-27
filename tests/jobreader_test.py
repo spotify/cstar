@@ -166,6 +166,30 @@ class JobReaderTest(unittest.TestCase):
             cstar.jobreader._parse(revised, "foo", "/somewhare", job, "1234", 5, 8,
                                    endpoint_mapper=lambda x: {})
 
+    def test_retry_failed_job(self):
+        job = cstar.job.Job()
+        job_id = "1234"
+        stop_after = 5
+        max_days = 999999
+        output_directory = "/som/dir"
+        filename = output_directory + "/some_file"
+        with open("tests/resources/failed_job.json", 'r') as f:
+            cstar.jobreader._parse(f.read(), "tests/resources/failed_job.json", output_directory, job, job_id, stop_after, max_days,
+                               endpoint_mapper=lambda x: {}, retry=False)
+            self.assertEqual(len(job.state.progress.failed), 1)
+        
+    def test_do_not_retry_failed_job(self):
+        job = cstar.job.Job()
+        job_id = "1234"
+        stop_after = 5
+        max_days = 999999
+        output_directory = "/som/dir"
+        filename = output_directory + "/some_file"
+        with open("tests/resources/failed_job.json", 'r') as f:
+            cstar.jobreader._parse(f.read(), "tests/resources/failed_job.json", output_directory, job, job_id, stop_after, max_days,
+                               endpoint_mapper=lambda x: {}, retry=True)
+            self.assertEqual(len(job.state.progress.failed), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

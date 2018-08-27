@@ -24,7 +24,7 @@ from cstar.exceptions import BadFileFormatVersion, FileTooOld
 from cstar.output import debug
 
 
-def read(job, job_id, stop_after, output_directory=None, max_days=7, endpoint_mapper=None):
+def read(job, job_id, stop_after, output_directory=None, max_days=7, endpoint_mapper=None, retry=False):
     output_directory = output_directory or os.path.expanduser("~/.cstar/jobs/" + job_id)
     file = output_directory + "/job.json"
 
@@ -32,11 +32,11 @@ def read(job, job_id, stop_after, output_directory=None, max_days=7, endpoint_ma
         endpoint_mapper = job.get_endpoint_mapping
 
     with open(file) as f:
-        return _parse(f.read(), file, output_directory, job, job_id, stop_after, max_days, endpoint_mapper)
+        return _parse(f.read(), file, output_directory, job, job_id, stop_after, max_days, endpoint_mapper, retry)
     return job
 
 
-def _parse(input, file, output_directory, job, job_id, stop_after, max_days, endpoint_mapper):
+def _parse(input, file, output_directory, job, job_id, stop_after, max_days, endpoint_mapper, retry=False):
     data = json.loads(input)
 
     if 'version' not in data:
@@ -72,6 +72,9 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
         done=[cstar.topology.Host(*arr) for arr in state['progress']['done']],
         failed=[cstar.topology.Host(*arr) for arr in state['progress']['failed']])
 
+    if retry==True:
+        progress.failed = set([])
+    
     original_topology = cstar.topology.Topology(cstar.topology.Host(*arr) for arr in state['original_topology'])
     current_topology = cstar.topology.Topology(cstar.topology.Host(*arr) for arr in state['current_topology'])
 
