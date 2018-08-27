@@ -1,0 +1,94 @@
+{
+    "command": "/some/directory/commands/command.sh",
+    "creation_timestamp": 1508493330,
+    "env": {},
+    "errors": [],
+    "job_runner": "RemoteJobRunner",
+    "key_space": null,
+    "sleep_on_new_runner": 0.5,
+    "output_directory": "/some/directory/jobs/5ac35f50-5c20-45a2-9d22-1ec2e0b9d959",
+    "state": {
+        "cluster_parallel": true,
+        "current_topology": [
+            [
+                "host1",
+                "1.2.3.4",
+                "dc",
+                "cluster",
+                3074457345618258602,
+                true
+            ],
+            [
+                "host2",
+                "1.2.3.5",
+                "dc",
+                "cluster",
+                -3074457345618258603,
+                true
+            ],
+            [
+                "host3",
+                "1.2.3.6",
+                "dc",
+                "cluster",
+                -9223372036854775808,
+                true
+            ]
+        ],
+        "dc_parallel": true,
+        "progress" : {
+            "running": [],
+            "done": [
+                [
+                    "host1",
+                    "1.2.3.4",
+                    "dc",
+                    "cluster",
+                    3074457345618258602,
+                    true
+                ]
+            ],
+            "failed": [
+                [
+                    "host2",
+                    "1.2.3.5",
+                    "dc",
+                    "cluster",
+                    -3074457345618258603,
+                    true
+                ]
+            ]
+        },
+        "max_concurrency": null,
+        "original_topology": [
+            [
+                "host1",
+                "1.2.3.4",
+                "dc",
+                "cluster",
+                3074457345618258602,
+                true
+            ],
+            [
+                "host2",
+                "1.2.3.5",
+                "dc",
+                "cluster",
+                -3074457345618258603,
+                true
+            ],
+            [
+                "host3",
+                "1.2.3.6",
+                "dc",
+                "cluster",
+                -9223372036854775808,
+                true
+            ]
+        ],
+        "strategy": "topology",
+        "ignore_down_nodes": false
+    },
+    "timeout": null,
+    "version": 6
+}

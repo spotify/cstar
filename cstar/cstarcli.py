@@ -48,10 +48,11 @@ def get_commands():
 
 
 def execute_continue(args):
+    msg("Retry : ", args.retry_failed)
     with cstar.job.Job() as job:
         try:
             cstar.jobreader.read(job, args.job_id, args.stop_after, max_days=args.max_job_age,
-                                 output_directory=args.output_directory)
+                                 output_directory=args.output_directory, retry=args.retry_failed)
         except (FileTooOld, BadFileFormatVersion) as e:
             error(e)
         msg("Resuming job", job.job_id)

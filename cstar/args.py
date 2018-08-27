@@ -75,6 +75,8 @@ def add_cstar_arguments(parser, commands, execute_command, execute_continue, exe
     continue_parser = subparsers.add_parser('continue', help='Continue a previously created job (*)')
     continue_parser.set_defaults(func=execute_continue)
     continue_parser.add_argument('job_id')
+    continue_parser.add_argument('--retry-failed', action="store_true", default=False,
+                        help='Retry failed nodes.')
     _add_common_arguments(continue_parser)
     _add_cstar_arguments_without_command(continue_parser)
     _add_ssh_arguments(continue_parser)
