@@ -69,7 +69,6 @@ def execute_cleanup(args):
 
 
 def execute_command(args):
-    cstar.output.debug(args)
     command = args.command
     if bool(args.seed_host) + bool(args.host) + bool(args.host_file) != 1:
         error("Exactly one of --seed-host, --host and --host-file must be used", print_traceback=False)
