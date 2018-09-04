@@ -76,7 +76,7 @@ class LocalJobRunner(object):
      This JobRunner is used by cstarpar
     """
 
-    def __init__(self, job, host):
+    def __init__(self, job, host, ssh_username=None, ssh_password=None, ssh_identity_file=None):
         self.job = job
         self.host = host
 

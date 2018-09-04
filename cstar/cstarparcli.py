@@ -87,7 +87,10 @@ def main():
             ignore_down_nodes=False,
             dc_filter=namespace.dc_filter,
             sleep_on_new_runner=namespace.ssh_pause_time,
-            sleep_after_done=namespace.node_done_pause_time)
+            sleep_after_done=namespace.node_done_pause_time,
+            ssh_username = namespace.ssh_username,
+            ssh_password = namespace.ssh_password,
+            ssh_identity_file = namespace.ssh_identity_file)
         job.run()
 
 
