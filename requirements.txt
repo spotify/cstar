@@ -1,1 +1,2 @@
 paramiko==2.3.2
+ssh2-python==0.15.0.post9

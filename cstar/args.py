@@ -38,6 +38,8 @@ def _add_destination_arguments(parser):
                         help='The amount of time to pause between establishing new ssh connections to avoid timeouts')
     parser.add_argument('--node-done-pause-time', type=float, default=0.0,
                         help='The amount of time (in seconds) to pause between a node has finished and the next node starting')
+    parser.add_argument('--ssh-lib', type=str, default="paramiko",
+                        help='SSH library to use for remote connections')
 
 
 def _add_strategy_arguments(parser):

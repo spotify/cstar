@@ -165,7 +165,7 @@ class Job(object):
               max_concurrency, timeout, env, stop_after, key_space, output_directory,
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
-              ssh_username, ssh_password, ssh_identity_file):
+              ssh_username, ssh_password, ssh_identity_file, ssh_lib="paramiko"):
 
         msg("Starting setup")
 
@@ -185,6 +185,7 @@ class Job(object):
         self.ssh_username = ssh_username
         self.ssh_password = ssh_password
         self.ssh_identity_file = ssh_identity_file
+        self.ssh_lib = ssh_lib
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory)
 
@@ -355,13 +356,13 @@ class Job(object):
 
     def schedule_job(self, host):
         debug("Running on host", host.fqdn)
-        threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file),
+        threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib),
                          name="cstar %s" % host.fqdn).start()
         time.sleep(self.sleep_on_new_runner)
 
     def _connection(self, host):
         if host not in self._connections:
-            self._connections[host] = cstar.remote.Remote(host, self.ssh_username, self.ssh_password, self.ssh_identity_file)
+            self._connections[host] = cstar.remote.Remote(host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib)
         return self._connections[host]
 
     def close(self):
