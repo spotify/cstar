@@ -107,8 +107,14 @@ class Job(object):
             return
         self.is_preheated = True
 
+        def get_host_by_addr(ip):
+            try:
+                socket.gethostbyaddr(ip)
+            except socket.herror:
+                pass
+
         def create_lookup_thread(ip):
-            return threading.Thread(target=lambda: socket.gethostbyaddr(ip))
+            return threading.Thread(target=get_host_by_addr, args=[ip])
 
         print("Preheating DNS cache")
         threads = [create_lookup_thread(ip) for ip in ips]
