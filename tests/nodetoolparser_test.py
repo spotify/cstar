@@ -74,6 +74,19 @@ class NodetoolParserTest(unittest.TestCase):
             self.assertEqual(True, topology.get_host("127.0.0.1").is_up)
             self.assertEqual(-9223372036854775808, topology.get_host("127.0.0.1").token)
             self.assertEqual("datacenter1", topology.get_host("127.0.0.1").dc)
+        with open("tests/resources/ring_state_changes.txt", 'r') as f:
+            topology = cstar.nodetoolparser.parse_nodetool_ring(f.read(), 'test_cluster', lambda _: None)
+            nodes = topology.hosts
+            self.assertEqual(9, len(nodes))
+            self.assertEqual("1.159.15.53", topology.get_host("1.159.15.53").ip)
+            self.assertEqual(False, topology.get_host("1.159.15.53").is_up)
+            self.assertEqual(False, topology.get_host("1.154.15.51").is_up)
+            self.assertEqual(False, topology.get_host("1.158.15.54").is_up)
+            self.assertEqual(True, topology.get_host("1.133.36.89").is_up)
+            self.assertEqual(False, topology.get_host("1.146.20.131").is_up)
+            self.assertEqual(-9223372036854775806, topology.get_host("1.159.15.53").token)
+            self.assertEqual("dc1", topology.get_host("1.159.15.53").dc)
+            self.assertEqual("dc3", topology.get_host("1.145.23.52").dc)
             
     def test_parse_nodetool_ring_with_vnodes(self):
         with open("tests/resources/ring_vnodes.txt", 'r') as f:
