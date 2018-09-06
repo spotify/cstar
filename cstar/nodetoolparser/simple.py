@@ -21,6 +21,7 @@ _cluster_name_re = re.compile(r"^\s*Name:\s*(.*)$", re.MULTILINE)
 _ip_re = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 _token_re = re.compile(r"^\-?\d+$")
 _status_re = re.compile(r"^[A-Za-z]+$")
+_state_re = re.compile(r"^[A-Za-z]+$")
 _keyspace_name_re = re.compile(r"^\s*Keyspace:\s*(.*)$", re.MULTILINE)
 
 
@@ -30,7 +31,7 @@ def parse_describe_cluster(text):
 
 def _parse_node(line):
     words = line.split()
-    if len(words) == 8 and re.match(_ip_re, words[0]) and re.match(_status_re, words[2]) and re.match(_token_re, words[7]):
+    if len(words) == 8 and re.match(_ip_re, words[0]) and re.match(_status_re, words[2]) and re.match(_state_re, words[3]) and re.match(_token_re, words[7]):
         return words
     else:
         return None
@@ -56,7 +57,7 @@ def parse_nodetool_ring(text, cluster_name, reverse_dns_preheat):
             except socket.herror:
                 pass
             topology.append(Host(fqdn=fqdn, ip=node[0], dc=datacenterName, cluster=cluster_name,
-                                 is_up=node[2] == "Up", token=int(node[7])))
+                                 is_up=(node[2] == "Up" and node[3] == "Normal"), token=int(node[7])))
 
     return Topology(topology)
 
