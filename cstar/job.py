@@ -114,7 +114,7 @@ class Job(object):
                 pass
 
         def create_lookup_thread(ip):
-            return threading.Thread(target=get_host_by_addr, args=[ip])
+            return threading.Thread(target=lambda: get_host_by_addr(ip))
 
         print("Preheating DNS cache")
         threads = [create_lookup_thread(ip) for ip in ips]
