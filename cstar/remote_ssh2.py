@@ -78,7 +78,6 @@ class RemoteSsh2(object):
 
     def run_job(self, file, jobid, timeout=None, env={}):
         try:
-            self._connect()
             dir = ".cstar/remote-jobs/" + jobid
             self.run(("mkdir", "-p", dir))
             self.put_command(file, "%s/job" % (dir,))
@@ -189,7 +188,6 @@ class RemoteSsh2(object):
                 remote_fh.write(data)
 
     def put_command(self, localpath, remotepath):
-        self._connect()
         self.put_file(localpath, remotepath)
         self.run(("chmod", "755", remotepath))
 

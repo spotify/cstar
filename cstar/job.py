@@ -67,6 +67,7 @@ class Job(object):
         self.ssh_username = None
         self.ssh_password = None
         self.ssh_identity_file = None
+        self.returned_jobs = list()
 
     def __enter__(self):
         return self
@@ -223,6 +224,7 @@ class Job(object):
                                        max_concurrency, current_topology=current_topology, stop_after=stop_after,
                                        ignore_down_nodes=ignore_down_nodes)
         msg("Setup done")
+        
 
     def update_current_topology(self, skip_nodes=()):
         new_topology = cstar.topology.Topology()
@@ -233,11 +235,11 @@ class Job(object):
             new_topology = new_topology | self.get_cluster_topology(seeds)
         self.state = self.state.with_topology(new_topology)
 
-    def wait_for_node_to_return(self, node):
+    def wait_for_node_to_return(self, nodes=()):
         """Wait until node returns"""
         while True:
             try:
-                self.update_current_topology((node,))
+                self.update_current_topology(nodes)
 
                 if self.state.is_healthy():
                     break
@@ -305,37 +307,52 @@ class Job(object):
     def wait_for_all_jobs(self):
         while self.state.progress.running:
             host, result = self.results.get()
-            self.handle_finished_job(host, result)
+            self.returned_jobs.append((host, result))
+            if self.results.empty():
+                self.handle_finished_jobs(self.returned_jobs)
+                self.returned_jobs = list()
 
     def wait_for_any_job(self):
         if self.do_loop:
             host, result = self.results.get(timeout=self.timeout)
-            self.handle_finished_job(host, result)
-            self.wait_for_node_to_return(host)
+            self.returned_jobs.append((host, result))
+            while not self.results.empty():
+                host, result = self.results.get(timeout=self.timeout)
+                self.returned_jobs.append((host, result))
+            self.handle_finished_jobs(self.returned_jobs)
+            
+            self.wait_for_node_to_return(returned_job[0] for returned_job in self.returned_jobs)
+            self.returned_jobs = list()
 
-    def handle_finished_job(self, host, result):
-        if result.status != 0:
-            self.errors.append((host, result))
-            self.state = self.state.with_failed(host)
-            msg("Failure on host", host.fqdn)
-            if result.out:
-                msg("stdout:", result.out)
-            if result.err:
-                msg("stderr:", result.err)
-            self.do_loop = False
-        else:
-            self.state = self.state.with_done(host)
-            info("Host %s finished successfully" % (host.fqdn,))
-            if result.out:
-                info("stdout:", result.out, sep="\n")
-            if result.err:
-                info("stderr:", result.err)
-            if self.sleep_after_done:
-                debug("Sleeping %d seconds..." % self.sleep_after_done)
-                time.sleep(self.sleep_after_done)
+    def handle_finished_jobs(self, finished_jobs):
+        debug("Processing ", len(finished_jobs), " finished jobs")
+        for finished_job in finished_jobs:
+            host = finished_job[0]
+            result = finished_job[1]
+            if result.status != 0:
+                self.errors.append((host, result))
+                self.state = self.state.with_failed(host)
+                msg("Failure on host", host.fqdn)
+                if result.out:
+                    msg("stdout:", result.out)
+                if result.err:
+                    msg("stderr:", result.err)
+                self.do_loop = False
+            else:
+                self.state = self.state.with_done(host)
+                info("Host %s finished successfully" % (host.fqdn,))
+                if result.out:
+                    info("stdout:", result.out, sep="\n")
+                if result.err:
+                    info("stderr:", result.err)
+                if self.sleep_after_done:
+                    debug("Sleeping %d seconds..." % self.sleep_after_done)
+                    time.sleep(self.sleep_after_done)
         cstar.jobwriter.write(self)
         # Signal the jobrunner that it can delete the remote job files and terminate.
-        self.handled_finished_jobs.add(host)
+        for finished_job in finished_jobs:
+            host, result = finished_job
+            self.handled_finished_jobs.add(host)
 
     def schedule_all_runnable_jobs(self):
         while True:
