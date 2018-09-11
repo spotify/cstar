@@ -26,7 +26,7 @@ import cstar.remote
 import cstar.jobreader
 from cstar.output import msg, error, emph
 import cstar.output
-from cstar.exceptions import BadFileFormatVersion, FileTooOld,NoHostsSpecified
+from cstar.exceptions import BadFileFormatVersion, FileTooOld,NoHostsSpecified, BadArgument
 import cstar.signalhandler
 import cstar.jobrunner
 import cstar.cleanup
@@ -85,7 +85,12 @@ def execute_command(args):
 
     with cstar.job.Job() as job:
         env = dict((arg.name, getattr(args, arg.name)) for arg in command.arguments)
-        job_id = str(uuid.uuid4())
+        if bool(args.enforced_job_id) == 1:
+            job_id = args.enforced_job_id
+            if not(validate_uuid4(job_id)):
+                raise BadArgument("Job id is not a valid UUID v4 value.")
+        else:
+            job_id = str(uuid.uuid4())
         msg("Job id is", emph(job_id))
         msg("Running", command.file)
 
@@ -115,6 +120,14 @@ def execute_command(args):
             ssh_identity_file = args.ssh_identity_file,
             ssh_lib=args.ssh_lib)
         job.run()
+
+def validate_uuid4(uuid_string):
+    try:
+        val = uuid.UUID(uuid_string)
+    except ValueError:
+        return False
+
+    return str(val) == uuid_string
 
 
 def main():
