@@ -22,7 +22,7 @@ _ip_re = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 _token_re = re.compile(r"^\-?\d+$")
 _status_re = re.compile(r"^[A-Za-z]+$")
 _state_re = re.compile(r"^[A-Za-z]+$")
-_keyspace_name_re = re.compile(r"^\s*Keyspace:\s*(.*)$", re.MULTILINE)
+_keyspace_name_re = re.compile(r"^\s*Keyspace\s*:\s*(.*)$", re.MULTILINE)
 
 
 def parse_describe_cluster(text):
