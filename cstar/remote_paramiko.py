@@ -18,6 +18,7 @@ import re
 from cstar.output import err, debug, msg
 from cstar.exceptions import BadSSHHost, BadEnvironmentVariable, NoHostsSpecified
 from cstar.executionresult import ExecutionResult
+from pkg_resources import resource_string
 
 PING_COMMAND = "echo ping"
 
@@ -89,21 +90,8 @@ class RemoteParamiko(object):
                     raise BadEnvironmentVariable(key)
 
             env_str = " ".join(key + "=" + self.escape(value) for key, value in env.items())
-            wrapper = r"""#! /bin/sh
-
-    if test -f pid; then
-        # We can't wait for things that aren't our children. Loop and sleep. :-(
-        while ! test -f status; do
-            sleep 10s
-        done
-        exit
-    fi
-
-    %s ./job >stdout 2>stderr &
-    echo $! >pid
-    wait $!
-    echo $? >status
-    """ % (env_str,)
+            remote_script = resource_string('cstar.resources', 'scripts/remote_job.sh')
+            wrapper = remote_script.decode("utf-8") % (env_str,)
             self.write_command(wrapper, "%s/wrapper" % (dir,))
 
             cmd = """

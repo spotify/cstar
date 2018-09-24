@@ -53,7 +53,7 @@ setup(name='cstar',
       install_requires=('paramiko'),
       python_requires='>=3',
       packages=('cstar', 'cstar.nodetoolparser', 'cstar.resources'),
-      package_data={'cstar.resources': ['commands/*']},
+      package_data={'cstar.resources': ['commands/*', 'scripts/*']},
       test_suite='tests',
       entry_points={
           'console_scripts': [

@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#import paramiko.client
 from ssh2.session import Session
 from ssh2.sftp import LIBSSH2_FXF_CREAT, LIBSSH2_FXF_WRITE, LIBSSH2_FXF_READ, \
     LIBSSH2_SFTP_S_IRUSR, LIBSSH2_SFTP_S_IRGRP, LIBSSH2_SFTP_S_IWUSR, \
     LIBSSH2_SFTP_S_IROTH
 import os, socket, sys
 import re
+from pkg_resources import resource_string
 
 from cstar.output import err, debug, msg
 from cstar.exceptions import BadSSHHost, BadEnvironmentVariable, NoHostsSpecified
@@ -87,21 +87,8 @@ class RemoteSsh2(object):
                     raise BadEnvironmentVariable(key)
 
             env_str = " ".join(key + "=" + self.escape(value) for key, value in env.items())
-            wrapper = r"""#! /bin/sh
-
-    if test -f pid; then
-        # We can't wait for things that aren't our children. Loop and sleep. :-(
-        while ! test -f status; do
-            sleep 10s
-        done
-        exit
-    fi
-
-    %s ./job >stdout 2>stderr &
-    echo $! >pid
-    wait $!
-    echo $? >status
-    """ % (env_str,)
+            remote_script = resource_string('cstar.resources', 'scripts/remote_job.sh')
+            wrapper = remote_script.decode("utf-8") % (env_str,)
             self.write_command(wrapper, "%s/wrapper" % (jobs_dir,))
             cmd_cd = "cd %s" % (self.escape(jobs_dir),)
             cmd_wrapper = "nohup ./wrapper"
