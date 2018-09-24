@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#import paramiko.client
 from cstar.remote_paramiko import RemoteParamiko
 from cstar.remote_ssh2 import RemoteSsh2
 from cstar.output import debug

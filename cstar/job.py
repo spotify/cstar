@@ -166,7 +166,7 @@ class Job(object):
               max_concurrency, timeout, env, stop_after, key_space, output_directory,
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
-              ssh_username, ssh_password, ssh_identity_file, ssh_lib="paramiko"):
+              ssh_username, ssh_password, ssh_identity_file, ssh_lib):
 
         msg("Starting setup")
 
@@ -224,7 +224,6 @@ class Job(object):
                                        max_concurrency, current_topology=current_topology, stop_after=stop_after,
                                        ignore_down_nodes=ignore_down_nodes)
         msg("Setup done")
-        
 
     def update_current_topology(self, skip_nodes=()):
         new_topology = cstar.topology.Topology()

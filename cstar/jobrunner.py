@@ -47,7 +47,7 @@ class RemoteJobRunner(object):
     This JobRunner is used by cstar
     """
 
-    def __init__(self, job, host, ssh_username=None, ssh_password=None, ssh_identity_file=None, ssh_lib="paramiko"):
+    def __init__(self, job, host, ssh_username, ssh_password, ssh_identity_file, ssh_lib):
         self.job = job
         self.host = host
         self.ssh_username = ssh_username
@@ -77,7 +77,7 @@ class LocalJobRunner(object):
      This JobRunner is used by cstarpar
     """
 
-    def __init__(self, job, host, ssh_username=None, ssh_password=None, ssh_identity_file=None, ssh_lib="paramiko"):
+    def __init__(self, job, host, ssh_username, ssh_password, ssh_identity_file, ssh_lib):
         self.job = job
         self.host = host
 

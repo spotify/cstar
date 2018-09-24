@@ -24,10 +24,7 @@ from cstar.output import err, debug, msg
 from cstar.exceptions import BadSSHHost, BadEnvironmentVariable, NoHostsSpecified
 from cstar.executionresult import ExecutionResult
 
-SFTP_MODE = LIBSSH2_SFTP_S_IRUSR | \
-           LIBSSH2_SFTP_S_IWUSR | \
-           LIBSSH2_SFTP_S_IRGRP | \
-           LIBSSH2_SFTP_S_IROTH
+SFTP_MODE = LIBSSH2_SFTP_S_IRUSR | LIBSSH2_SFTP_S_IWUSR | LIBSSH2_SFTP_S_IRGRP | LIBSSH2_SFTP_S_IROTH
 SFTP_FLAGS = LIBSSH2_FXF_CREAT | LIBSSH2_FXF_WRITE
 PING_COMMAND = "echo ping"
 
@@ -62,14 +59,14 @@ class RemoteSsh2(object):
                 self.session = Session()
                 self.session.handshake(sock)
                 if self.ssh_identity_file != None:
-                    self.session.userauth_publickey_fromfile(self.ssh_username, None, self.ssh_identity_file, '')
-                if self.ssh_password != None:
+                    self.session.userauth_publickey_fromfile(self.ssh_username, self.ssh_identity_file, '', None)
+                elif self.ssh_password != None:
                     self.session.userauth_password(self.ssh_username, self.ssh_password)
-                debug("Username : ", self.ssh_username)
-                debug("Id file: ", self.ssh_identity_file)
-                if self.ssh_username == None:
+                elif self.ssh_username == None:
                     user = os.getlogin()
                     self.session.agent_auth(user)
+                else:
+                    self.session.agent_auth(self.ssh_username)
             self.channel = self.session.open_session()
         except:
             self.channel = None
@@ -78,9 +75,9 @@ class RemoteSsh2(object):
 
     def run_job(self, file, jobid, timeout=None, env={}):
         try:
-            dir = ".cstar/remote-jobs/" + jobid
-            self.run(("mkdir", "-p", dir))
-            self.put_command(file, "%s/job" % (dir,))
+            jobs_dir = ".cstar/remote-jobs/" + jobid
+            self.run(("mkdir", "-p", jobs_dir))
+            self.put_command(file, "%s/job" % (jobs_dir,))
 
             # Manually insert environment into script, since passing env into exec_command leads to it being
             # ignored on most ssh servers. :-(
@@ -105,15 +102,14 @@ class RemoteSsh2(object):
     wait $!
     echo $? >status
     """ % (env_str,)
-            self.write_command(wrapper, "%s/wrapper" % (dir,))
-            cmd_cd = "cd %s" % (self.escape(dir),)
+            self.write_command(wrapper, "%s/wrapper" % (jobs_dir,))
+            cmd_cd = "cd %s" % (self.escape(jobs_dir),)
             cmd_wrapper = "nohup ./wrapper"
-            #import pdb; pdb.set_trace()
             self.exec_command(cmd_cd + ";" + cmd_wrapper)
             out, err_output, status = self.read_channel()
-            real_output = self.read_file(dir + "/stdout")
-            real_error = self.read_file(dir + "/stderr")
-            real_status = int(self.read_file(dir + "/status"))
+            real_output = self.read_file(jobs_dir + "/stdout")
+            real_error = self.read_file(jobs_dir + "/stderr")
+            real_status = int(self.read_file(jobs_dir + "/status"))
             return ExecutionResult(cmd_wrapper, real_status, real_output, real_error)
         except:
             err("Command failed : ", sys.exc_info()[0])
