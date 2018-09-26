@@ -29,7 +29,7 @@ import cstar.jobrunner
 import cstar.jobprinter
 import cstar.jobwriter
 from cstar.exceptions import BadSSHHost, NoHostsSpecified, HostIsDown, \
-    NoDefaultKeyspace, UnknownHost
+    NoDefaultKeyspace, UnknownHost, FailedExecution
 from cstar.output import msg, debug, emph, info, error
 
 MAX_ATTEMPTS = 3
@@ -144,9 +144,9 @@ class Job(object):
                 keyspaces = [self.key_space]
             else:
                 keyspaces = self.get_keyspaces(conn)
-
+            has_error = True
             for keyspace in keyspaces:
-                if keyspace != "system":
+                try:
                     debug("Fetching endpoint mapping for keyspace", keyspace)
                     res = conn.run(("nodetool", "describering", keyspace))
                     has_error = False
@@ -157,6 +157,9 @@ class Job(object):
                     describering = cstar.nodetoolparser.parse_nodetool_describering(res.out)
                     range_mapping = cstar.nodetoolparser.convert_describering_to_range_mapping(describering)
                     mappings.append(cstar.endpoint_mapping.parse(range_mapping, topology, lookup=ip_lookup))
+                except Exception as e:
+                    if not keyspace.startswith("system"):
+                        raise FailedExecution(e) 
 
             if not has_error:
                 return cstar.endpoint_mapping.merge(mappings)
