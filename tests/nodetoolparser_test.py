@@ -152,7 +152,7 @@ class NodetoolParserTest(unittest.TestCase):
             self.assertEqual(keyspaces, ['reaper_db', 'system_traces', 'booya', 'system', 'system_distributed', 'system_auth'])
         with open("tests/resources/cfstats-3.11.txt", 'r') as f:
             keyspaces = cstar.nodetoolparser.extract_keyspaces_from_cfstats(f.read())
-            self.assertEqual(keyspaces, ['reaper_db', 'system_traces', 'booya', 'system', 'system_distributed', 'system_auth'])
+            self.assertEqual(keyspaces, ['reaper_db', 'system_traces', 'system', 'system_distributed', 'system_schema', 'system_auth'])
 
     def test_convert_describering_to_json(self):
         with open("tests/resources/describering-2.2.txt", 'r') as f:
