@@ -90,7 +90,8 @@ def main():
             sleep_after_done=namespace.node_done_pause_time,
             ssh_username = namespace.ssh_username,
             ssh_password = namespace.ssh_password,
-            ssh_identity_file = namespace.ssh_identity_file)
+            ssh_identity_file = namespace.ssh_identity_file,
+            ssh_lib=namespace.ssh_lib)
         job.run()
 
 

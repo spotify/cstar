@@ -24,6 +24,8 @@ class FailedExecution(Exception):
 class BadEnvironmentVariable(Exception):
     pass
 
+class BadArgument(Exception):
+    pass
 
 class NoHostsSpecified(Exception):
     pass

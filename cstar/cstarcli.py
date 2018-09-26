@@ -112,7 +112,8 @@ def execute_command(args):
             sleep_after_done=args.node_done_pause_time,
             ssh_username = args.ssh_username,
             ssh_password = args.ssh_password,
-            ssh_identity_file = args.ssh_identity_file)
+            ssh_identity_file = args.ssh_identity_file,
+            ssh_lib=args.ssh_lib)
         job.run()
 
 
