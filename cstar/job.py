@@ -147,21 +147,18 @@ class Job(object):
                 keyspaces = self.get_keyspaces(conn)
             has_error = True
             for keyspace in keyspaces:
-                try:
+                if not keyspace in ['system', 'system_schema']:
                     debug("Fetching endpoint mapping for keyspace", keyspace)
                     res = conn.run(("nodetool", "describering", keyspace))
                     has_error = False
 
-                    if res.status != 0:
+                    if res.status != 0 and not keyspace.startswith("system"):
                         has_error = True
                         break
                     describering = cstar.nodetoolparser.parse_nodetool_describering(res.out)
                     range_mapping = cstar.nodetoolparser.convert_describering_to_range_mapping(describering)
                     mappings.append(cstar.endpoint_mapping.parse(range_mapping, topology, lookup=ip_lookup))
-                except Exception as e:
-                    if not keyspace.startswith("system"):
-                        raise FailedExecution(e) 
-
+                    
             if not has_error:
                 return cstar.endpoint_mapping.merge(mappings)
 
