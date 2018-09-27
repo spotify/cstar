@@ -33,7 +33,27 @@ You need to have Python3 and run an updated version of pip (9.0.1).
 
 It's also possible to install straight from repo. This installs the latest version that may not be pushed to pypi:
 
-    # pip install git+ssh://git@github.com/spotify/cstar.git
+    # pip install git+https://github.com/spotify/cstar.git
+
+Some systems (like Ubuntu 14.04) might trigger ssh2-python related errors when installing because the locally available libssh2 is too old (<1.6.0).
+In such case, please apply the following procedure : 
+
+```
+git clone --recurse-submodules https://github.com/ParallelSSH/ssh2-python.git
+sudo apt-get install cmake -y
+sudo apt install libssl-dev -y
+sudo apt install libffi-dev -y
+cd ssh2-python
+sudo ./ci/install-ssh2.sh
+sudo apt install python3-pip -y
+sudo pip3 install setuptools --upgrade
+sudo pip3 install bcrypt --upgrade
+sudo pip3 install cstar --upgrade
+# or: 
+# sudo pip3 install git+https://github.com/spotify/cstar.git --upgrade
+```
+
+This will build libssh2 from source using the one that ships with ssh2-python and install some required dependencies.
 
 
 ## Code of conduct
@@ -75,6 +95,14 @@ There are two special case invocations:
   to resume.
 
 * One can skip the script name and instead use the `cleanup-jobs`. See [Cleaning up old jobs](#Cleaning-up-old-jobs).
+
+* Two python ssh modules can be used : `paramiko` (default) and `ssh2-python`. To use the faster (but experimental) ssh2-python module add the following flag : `--ssh-lib=ssh2`
+
+* If you need to access the remote cluster with a specific username, add `--ssh-username=remote_username` to your cstar command line. A private key file can also be specified using `--ssh-identity-file=my_key_file.pem`.
+
+* To use plain text authentication, please add `--ssh-password=my_password` to the command line.
+
+* In order to run the command first on a single node and then stop execution to verify everything worked as expected, add the following flag to your command line : `--stop-after=1`. cstar will stop after the first node executed the command and print out the appropriate resume command to continue the execution when ready : `cstar continue <JOB_ID>`
 
 A script file can specify additional parameters.
 
