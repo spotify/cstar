@@ -39,15 +39,10 @@ Some systems (like Ubuntu 14.04) might trigger ssh2-python related errors when i
 In such case, please apply the following procedure : 
 
 ```
+sudo apt-get install cmake libssl-dev libffi-dev python3-pip -y
 git clone --recurse-submodules https://github.com/ParallelSSH/ssh2-python.git
-sudo apt-get install cmake -y
-sudo apt install libssl-dev -y
-sudo apt install libffi-dev -y
-cd ssh2-python
-sudo ./ci/install-ssh2.sh
-sudo apt install python3-pip -y
-sudo pip3 install setuptools --upgrade
-sudo pip3 install bcrypt --upgrade
+cd ssh2-python; sudo ./ci/install-ssh2.sh
+sudo pip3 install setuptools bcrypt --upgrade
 sudo pip3 install cstar --upgrade
 # or: 
 # sudo pip3 install git+https://github.com/spotify/cstar.git --upgrade
