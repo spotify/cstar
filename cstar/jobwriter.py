@@ -21,7 +21,7 @@ import cstar.state
 import cstar.progress
 import cstar.topology
 
-FILE_FORMAT_VERSION = 6
+FILE_FORMAT_VERSION = 7
 
 
 def _to_dict(child):
