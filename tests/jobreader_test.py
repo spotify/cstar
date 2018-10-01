@@ -42,6 +42,10 @@ def get_example_file():
     "key_space": null,
     "sleep_on_new_runner": 0.5,
     "output_directory": "/some/directory/jobs/5ac35f50-5c20-45a2-9d22-1ec2e0b9d959",
+    "ssh_username": null,
+    "ssh_password": null,
+    "ssh_identity_file": null,
+    "ssh_lib": "paramiko",
     "state": {
         "cluster_parallel": true,
         "current_topology": [
@@ -124,7 +128,7 @@ def get_example_file():
         "ignore_down_nodes": false
     },
     "timeout": null,
-    "version": 0
+    "version": 7
 }
 """
     return revise(SMALL_EXAMPLE, version=cstar.jobwriter.FILE_FORMAT_VERSION)
