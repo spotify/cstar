@@ -61,6 +61,10 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
     job.key_space = data['key_space'] if 'key_space' in data else None
     job.output_directory = output_directory
     job.sleep_on_new_runner = data['sleep_on_new_runner']
+    job.ssh_username = data['ssh_username']
+    job.ssh_identity_file = data['ssh_identity_file']
+    job.ssh_password = data['ssh_password']
+    job.ssh_lib = data['ssh_lib']
 
     strategy = cstar.strategy.parse(state['strategy'])
     cluster_parallel = state['cluster_parallel']
