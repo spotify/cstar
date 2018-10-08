@@ -18,7 +18,7 @@ from cstar.output import debug
 from cstar.exceptions import BadArgument
 
 class Remote(object):
-    def __init__(self, hostname, ssh_username=None, ssh_password=None, ssh_identity_file=None, ssh_lib="paramiko"):
+    def __init__(self, hostname, ssh_username, ssh_password, ssh_identity_file, ssh_lib):
         debug("Using ssh lib : ", ssh_lib)
         self.remote = None
         if ssh_lib == 'paramiko':
