@@ -17,7 +17,7 @@ from ssh2.sftp import LIBSSH2_FXF_CREAT, LIBSSH2_FXF_WRITE, LIBSSH2_FXF_READ, \
     LIBSSH2_SFTP_S_IRUSR, LIBSSH2_SFTP_S_IRGRP, LIBSSH2_SFTP_S_IWUSR, \
     LIBSSH2_SFTP_S_IROTH
 import os, socket, sys
-import re
+import re, tempfile
 from pkg_resources import resource_string
 
 from cstar.output import err, debug, msg
@@ -155,20 +155,24 @@ class RemoteSsh2(object):
 
     def read_file(self, remotepath):
         self._connect()
-        content = []
-        sftp = self.session.sftp_init()
-        with sftp.open(remotepath, LIBSSH2_FXF_READ, LIBSSH2_SFTP_S_IRUSR) as remote_fh:
-            for size, data in remote_fh:
-                content.append(data.decode())
-        return "".join(content)
+        debug("Retrieving %s through SCP"% (remotepath))
+        channel, info = self.session.scp_recv(remotepath)
+        if info.st_size == 0:
+            return ""
+        size, content = channel.read(info.st_size-1)
+        channel.close()
+        return content.decode("utf-8")
 
     def put_file(self, localpath, remotepath):
         self._connect()
-        sftp = self.session.sftp_init()
-        with open(localpath, 'rb') as local_fh, \
-            sftp.open(remotepath, SFTP_FLAGS, SFTP_MODE) as remote_fh:
+        fileinfo = os.stat(localpath)
+        chan = self.session.scp_send64(remotepath, fileinfo.st_mode & 755, fileinfo.st_size,
+                        fileinfo.st_mtime, fileinfo.st_atime)
+        debug("Starting SCP of local file %s to remote %s:%s" % (
+            localpath, self.hostname, remotepath))
+        with open(localpath, 'rb') as local_fh:
             for data in local_fh:
-                remote_fh.write(data)
+                chan.write(data)
 
     def put_command(self, localpath, remotepath):
         self.put_file(localpath, remotepath)
@@ -176,9 +180,10 @@ class RemoteSsh2(object):
 
     def write_command(self, definition, remotepath):
         self._connect()
-        sftp = self.session.sftp_init()
-        with sftp.open(remotepath, SFTP_FLAGS, SFTP_MODE) as remote_fh:
-            remote_fh.write(str.encode(definition))
+        with tempfile.NamedTemporaryFile() as fp:
+            fp.write(str.encode(definition))
+            fp.flush()
+            self.put_file(fp.name, remotepath)
         self.run(("chmod", "755", remotepath))
 
     def mkdir(self, path):
