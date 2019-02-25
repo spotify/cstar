@@ -21,6 +21,7 @@ def _add_common_arguments(parser):
     parser.add_argument('--output-directory', help='Output location for job log')
     parser.add_argument('--ignore-down-nodes', action="store_true", default=False,
                         help='Run the command even if there are down nodes in the cluster')
+    parser.add_argument('--enforced-job-id', help='Force the job id value to ease external tracking')
 
 
 def _add_destination_arguments(parser):
