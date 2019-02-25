@@ -65,6 +65,7 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
     job.ssh_identity_file = data['ssh_identity_file']
     job.ssh_password = data['ssh_password']
     job.ssh_lib = data['ssh_lib']
+    job.jmx_username = data['jmx_username']
 
     strategy = cstar.strategy.parse(state['strategy'])
     cluster_parallel = state['cluster_parallel']

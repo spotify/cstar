@@ -15,6 +15,7 @@
 """Argument parsing and related plumbing for the cstarpar command"""
 
 import argparse
+import getpass
 import sys
 import uuid
 
@@ -47,6 +48,11 @@ def parse_job_mode():
 
 def main():
     namespace = parse_job_mode()
+
+    if namespace.jmx_username:
+        namespace.jmx_password = getpass.getpass(prompt="JMX Password ")
+    else:
+        namespace.jmx_password = None
 
     if bool(namespace.seed_host) + bool(namespace.host) + bool(namespace.host_file) != 1:
         error("Exactly one of --seed-host, --host and --host-file must be used", print_traceback=False)
@@ -91,7 +97,9 @@ def main():
             ssh_username = namespace.ssh_username,
             ssh_password = namespace.ssh_password,
             ssh_identity_file = namespace.ssh_identity_file,
-            ssh_lib=namespace.ssh_lib)
+            ssh_lib=namespace.ssh_lib,
+            jmx_username=namespace.jmx_username,
+            jmx_password=namespace.jmx_password)
         job.run()
 
 

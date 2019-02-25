@@ -55,7 +55,7 @@ def _progress_to_dict(self):
 
 
 def _job_to_dict(self):
-    skip = {"results", "handled_finished_jobs", "do_loop", "job_id", "job_runner"}
+    skip = {"results", "handled_finished_jobs", "do_loop", "job_id", "job_runner", "jmx_password"}
     data = dict((key, _to_dict(val)) for key, val in self.__dict__.items() if key[0] != '_' and key not in skip)
     data["version"] = FILE_FORMAT_VERSION
     data["job_runner"] = self.job_runner.__name__
