@@ -15,21 +15,22 @@
 """Argument parsing and related plumbing for the cstar command"""
 
 import argparse
+import getpass
 import sys
 import uuid
 
 import cstar.args
-import cstar.command
-import cstar.strategy
-import cstar.job
-import cstar.remote
-import cstar.jobreader
-from cstar.output import msg, error, emph
-import cstar.output
-from cstar.exceptions import BadFileFormatVersion, FileTooOld,NoHostsSpecified, BadArgument
-import cstar.signalhandler
-import cstar.jobrunner
 import cstar.cleanup
+import cstar.command
+import cstar.job
+import cstar.jobreader
+import cstar.jobrunner
+import cstar.output
+import cstar.signalhandler
+import cstar.strategy
+from cstar.exceptions import BadArgument
+from cstar.exceptions import BadFileFormatVersion, FileTooOld
+from cstar.output import msg, error, emph
 
 
 def fallback(*args):
@@ -56,6 +57,10 @@ def execute_continue(args):
         except (FileTooOld, BadFileFormatVersion) as e:
             error(e)
         msg("Resuming job", job.job_id)
+
+        if job.jmx_username:
+            job.jmx_password = getpass.getpass(prompt="JMX Password ")
+
         msg("Running ", job.command)
 
         cstar.signalhandler.print_message_and_save_on_sigint(job, job.job_id)
@@ -115,10 +120,12 @@ def execute_command(args):
             dc_filter=args.dc_filter,
             sleep_on_new_runner=args.ssh_pause_time,
             sleep_after_done=args.node_done_pause_time,
-            ssh_username = args.ssh_username,
-            ssh_password = args.ssh_password,
-            ssh_identity_file = args.ssh_identity_file,
-            ssh_lib=args.ssh_lib)
+            ssh_username=args.ssh_username,
+            ssh_password=args.ssh_password,
+            ssh_identity_file=args.ssh_identity_file,
+            ssh_lib=args.ssh_lib,
+            jmx_username=args.jmx_username,
+            jmx_password=args.jmx_password)
         job.run()
 
 def validate_uuid4(uuid_string):
@@ -141,6 +148,12 @@ def main():
         return
 
     namespace = parser.parse_args(sys.argv[1:])
+
+    if namespace.jmx_username:
+        namespace.jmx_password = getpass.getpass(prompt="JMX Password ")
+    else:
+        namespace.jmx_password = None
+
     cstar.output.configure(namespace.verbose)
     namespace.func(namespace)
 

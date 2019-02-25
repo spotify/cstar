@@ -67,6 +67,8 @@ class Job(object):
         self.ssh_username = None
         self.ssh_password = None
         self.ssh_identity_file = None
+        self.jmx_username = None
+        self.jmx_password = None
         self.returned_jobs = list()
 
     def __enter__(self):
@@ -89,8 +91,8 @@ class Job(object):
             tried_hosts.append(host)
             conn = self._connection(host)
 
-            describe_res = conn.run(("nodetool", "describecluster"))
-            topology_res = conn.run(("nodetool", "ring"))
+            describe_res = self.run_nodetool(conn, "describecluster")
+            topology_res = self.run_nodetool(conn, "ring")
 
             if (describe_res.status == 0) and (topology_res.status == 0):
                 cluster_name = cstar.nodetoolparser.parse_describe_cluster(describe_res.out)
@@ -129,7 +131,7 @@ class Job(object):
         print("Preheating done")
 
     def get_keyspaces(self, conn):
-        cfstats_output = conn.run(("nodetool", "cfstats","|","grep","Keyspace"))
+        cfstats_output = self.run_nodetool(conn, *("cfstats", "|", "grep", "Keyspace"))
         return cstar.nodetoolparser.extract_keyspaces_from_cfstats(cfstats_output.out)
 
     def get_endpoint_mapping(self, topology):
@@ -149,7 +151,7 @@ class Job(object):
             for keyspace in keyspaces:
                 if not keyspace in ['system', 'system_schema']:
                     debug("Fetching endpoint mapping for keyspace", keyspace)
-                    res = conn.run(("nodetool", "describering", keyspace))
+                    res = self.run_nodetool(conn, *("describering", keyspace))
                     has_error = False
 
                     if res.status != 0 and not keyspace.startswith("system"):
@@ -168,11 +170,18 @@ class Job(object):
         raise HostIsDown("Could not find any working host while fetching endpoint mapping. Tried the following hosts:",
                          ", ".join(host.fqdn for host in tried_hosts))
 
+    def run_nodetool(self, conn, *cmds):
+        if self.jmx_username and self.jmx_password:
+            return conn.run(("nodetool", "-u", self.jmx_username, "-pw", self.jmx_password, *cmds))
+        else:
+            return conn.run(("nodetool", *cmds))
+
     def setup(self, hosts, seeds, command, job_id, strategy, cluster_parallel, dc_parallel, job_runner,
               max_concurrency, timeout, env, stop_after, key_space, output_directory,
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
-              ssh_username, ssh_password, ssh_identity_file, ssh_lib):
+              ssh_username, ssh_password, ssh_identity_file, ssh_lib,
+              jmx_username, jmx_password):
 
         msg("Starting setup")
 
@@ -193,6 +202,8 @@ class Job(object):
         self.ssh_password = ssh_password
         self.ssh_identity_file = ssh_identity_file
         self.ssh_lib = ssh_lib
+        self.jmx_username = jmx_username
+        self.jmx_password = jmx_password
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory)
 
