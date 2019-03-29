@@ -94,5 +94,6 @@
         "ignore_down_nodes": false
     },
     "timeout": null,
-    "version": 7
+    "jmx_username": null,
+    "version": 8
 }

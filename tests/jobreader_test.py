@@ -128,7 +128,8 @@ def get_example_file():
         "ignore_down_nodes": false
     },
     "timeout": null,
-    "version": 7
+    "jmx_username": null,
+    "version": 8
 }
 """
     return revise(SMALL_EXAMPLE, version=cstar.jobwriter.FILE_FORMAT_VERSION)
