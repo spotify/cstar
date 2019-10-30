@@ -103,5 +103,6 @@
     },
     "timeout": null,
     "jmx_username": null,
-    "version": 8
+    "version": 8,
+    "hosts_variables": null
 }

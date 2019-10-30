@@ -1,85 +1,132 @@
-version: '3.8'
+version: '3.2'
 
 services:
-  cassandra-0:
+  cassandra-00:
     build:
         context: .
         dockerfile: integration-cassandra.docker
     image: cstar:integration-cassandra
     environment:
         CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
+        CASSANDRA_CLUSTER_NAME: cluster1
         CASSANDRA_DC: dc1
         CASSANDRA_RACK: r1
         CASSANDRA_NUM_TOKENS: 16
     healthcheck:
-        test: ["CMD", "nc", "-z", "cassandra-0", "9042"]
-        interval: 30s
+        test: ["CMD", "nc", "-z", "cassandra-00", "9042"]
+        interval: 5s
         timeout: 10s
-        retries: 5
+        retries: 60
 
-  cassandra-1:
+  cassandra-10:
+    build:
+        context: .
+        dockerfile: integration-cassandra.docker
+    image: cstar:integration-cassandra
+    environment:
+        CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
+        CASSANDRA_CLUSTER_NAME: cluster2
+        CASSANDRA_DC: dc1
+        CASSANDRA_RACK: r1
+        CASSANDRA_NUM_TOKENS: 16
+    healthcheck:
+        test: ["CMD", "nc", "-z", "cassandra-10", "9042"]
+        interval: 5s
+        timeout: 10s
+        retries: 60
+
+  cassandra-01:
     build:
         context: .
         dockerfile: integration-cassandra.docker
     image: cstar:integration-cassandra
     depends_on:
-        - cassandra-0
+        - cassandra-00
     environment:
-        CASSANDRA_SEEDS: cassandra-0
+        CASSANDRA_SEEDS: cassandra-00
         CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
+        CASSANDRA_CLUSTER_NAME: cluster1
         CASSANDRA_DC: dc1
         CASSANDRA_RACK: r2
         CASSANDRA_NUM_TOKENS: 16
-        CASSANDRA_WAIT_ON: cassandra-0
+        CASSANDRA_WAIT_ON: cassandra-00
+        JVM_EXTRA_OPTS: '-Dcassandra.consistent.rangemovement=false -Dcassandra.ring_delay_ms=2000'
     healthcheck:
-        test: ["CMD", "nc", "-z", "cassandra-1", "9042"]
-        interval: 30s
+        test: ["CMD", "nc", "-z", "cassandra-01", "9042"]
+        interval: 5s
         timeout: 10s
-        retries: 5
+        retries: 60
 
-# not enough memory to do this locally
-#  cassandra-2:
-#    build:
-#        context: .
-#        dockerfile: integration-cassandra.docker
-#    image: cstar:integration-cassandra
-#    depends_on:
-#        - cassandra-1
-#    environment:
-#        CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
-#        CASSANDRA_DC: dc2
-#        CASSANDRA_RACK: r1
-#        CASSANDRA_NUM_TOKENS: 16
-#        CASSANDRA_WAIT_ON: cassandra-1
-#    healthcheck:
-#        test: ["CMD", "nc", "-z", "cassandra-0", "9042"]
-#        interval: 30s
-#        timeout: 10s
-#        retries: 5
-#
-#  cassandra-3:
-#    build:
-#        context: .
-#        dockerfile: integration-cassandra.docker
-#    image: cstar:integration-cassandra
-#    depends_on:
-#        - cassandra-2
-#    environment:
-#        CASSANDRA_SEEDS: cassandra-0
-#        CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
-#        CASSANDRA_DC: dc2
-#        CASSANDRA_RACK: r2
-#        CASSANDRA_NUM_TOKENS: 16
-#        CASSANDRA_WAIT_ON: cassandra-2
-#    healthcheck:
-#        test: ["CMD", "nc", "-z", "cassandra-0", "9042"]
-#        interval: 30s
-#        timeout: 10s
-#        retries: 5
+  cassandra-02:
+    build:
+       context: .
+       dockerfile: integration-cassandra.docker
+    image: cstar:integration-cassandra
+    depends_on:
+       - cassandra-00
+    environment:
+       CASSANDRA_SEEDS: cassandra-00
+       CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
+       CASSANDRA_CLUSTER_NAME: cluster1
+       CASSANDRA_DC: dc2
+       CASSANDRA_RACK: r1
+       CASSANDRA_NUM_TOKENS: 16
+       CASSANDRA_WAIT_ON: cassandra-00
+       JVM_EXTRA_OPTS: '-Dcassandra.consistent.rangemovement=false -Dcassandra.ring_delay_ms=2000'
+    healthcheck:
+       test: ["CMD", "nc", "-z", "cassandra-02", "9042"]
+       interval: 5s
+       timeout: 10s
+       retries: 60
+
+  cassandra-03:
+    build:
+       context: .
+       dockerfile: integration-cassandra.docker
+    image: cstar:integration-cassandra
+    depends_on:
+       - cassandra-00
+    environment:
+       CASSANDRA_SEEDS: cassandra-00
+       CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
+       CASSANDRA_CLUSTER_NAME: cluster1
+       CASSANDRA_DC: dc2
+       CASSANDRA_RACK: r2
+       CASSANDRA_NUM_TOKENS: 16
+       CASSANDRA_WAIT_ON: cassandra-00
+       JVM_EXTRA_OPTS: '-Dcassandra.consistent.rangemovement=false -Dcassandra.ring_delay_ms=2000'
+    healthcheck:
+       test: ["CMD", "nc", "-z",  "cassandra-03", "9042"]
+       interval: 5s
+       timeout: 10s
+       retries: 60
+
+  cassandra-11:
+    build:
+        context: .
+        dockerfile: integration-cassandra.docker
+    image: cstar:integration-cassandra
+    depends_on:
+        - cassandra-10
+    environment:
+        CASSANDRA_SEEDS: cassandra-10
+        CASSANDRA_ENDPOINT_SNITCH: "GossipingPropertyFileSnitch"
+        CASSANDRA_CLUSTER_NAME: cluster2
+        CASSANDRA_DC: dc1
+        CASSANDRA_RACK: r2
+        CASSANDRA_NUM_TOKENS: 16
+        CASSANDRA_WAIT_ON: cassandra-10
+        JVM_EXTRA_OPTS: '-Dcassandra.consistent.rangemovement=false -Dcassandra.ring_delay_ms=2000'
+    healthcheck:
+        test: ["CMD", "nc", "-z", "cassandra-11", "9042"]
+        interval: 5s
+        timeout: 10s
+        retries: 60
 
   cstar:
     build:
         context: .
         dockerfile: integration-cstar.docker
     image: cstar:integration-cstar
-
+    volumes:
+      - ..:/usr/src/app/cstar

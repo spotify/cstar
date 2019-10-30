@@ -138,7 +138,8 @@ def get_example_file():
     },
     "timeout": null,
     "jmx_username": null,
-    "version": 8
+    "version": 8,
+    "hosts_variables": null
 }
 """
     return revise(SMALL_EXAMPLE, version=cstar.jobwriter.FILE_FORMAT_VERSION)

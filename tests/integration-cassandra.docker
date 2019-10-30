@@ -1,6 +1,7 @@
-FROM cassandra:3.11.6
+FROM cassandra:3.11
 
-RUN apt-get update && apt-get install -y openssh-server wait-for-it
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y openssh-server wait-for-it netcat
 RUN mkdir /var/run/sshd
 RUN echo 'root:root' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -12,6 +13,8 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
+ENV MAX_HEAP_SIZE 500M
+ENV HEAP_NEWSIZE 100M
 
 ENV CASSANDRA_HOME /opt/cassandra
 ENV CASSANDRA_CONF /etc/cassandra
