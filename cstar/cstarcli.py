@@ -112,7 +112,6 @@ def execute_command(args):
         msg("Running", command.file)
         msg("env", env)
 
-
         cstar.signalhandler.print_message_and_save_on_sigint(job, job_id)
 
         job.setup(
