@@ -107,7 +107,6 @@ def execute_command(args):
             job_id = str(uuid.uuid4())
         msg("Job id is", emph(job_id))
         msg("Running", command.file)
-        msg("env", env)
         
 
         cstar.signalhandler.print_message_and_save_on_sigint(job, job_id)
