@@ -73,6 +73,7 @@ class Job(object):
         self.ssh_identity_file = None
         self.jmx_username = None
         self.jmx_password = None
+        self.hosts_variables = dict()
         self.returned_jobs = list()
         self.schema_versions = list()
         self.status_topology_hash = list()
@@ -112,7 +113,7 @@ class Job(object):
                     topologies.append(cstar.nodetoolparser.parse_nodetool_status(status_res.out, cluster_name, self.reverse_dns_preheat, self.resolve_hostnames))
                     self.schema_versions.append(schema_version)
                     self.status_topology_hash.append(topologies[len(topologies) - 1].get_hash())
-            
+
 
             count += 1
             if count >= MAX_ATTEMPTS:
@@ -128,7 +129,7 @@ class Job(object):
     def get_cache_file_path(self, cache_type):
         debug("Cache file: {}-{}-{}".format(cache_type, "-".join(sorted(self.schema_versions)), "-".join(sorted(self.status_topology_hash))))
         return os.path.join(self.cache_directory, "{}-{}-{}".format(cache_type, "-".join(sorted(self.schema_versions)), "-".join(sorted(self.status_topology_hash))))
-    
+
     def maybe_get_data_from_cache(self, cache_type):
         try:
             cache_file = self.get_cache_file_path(cache_type)
@@ -175,7 +176,7 @@ class Job(object):
         failed_hosts = []
         mappings = []
         count = 0
-        
+
         endpoint_mappings = self.maybe_get_data_from_cache("endpoint_mapping")
         if endpoint_mappings is not None:
             return endpoint_mappings
@@ -185,7 +186,7 @@ class Job(object):
                 # We need to fetch keyspaces on one node per cluster, no more.
                 continue
 
-            count = 0            
+            count = 0
             conn = self._connection(host)
 
             if self.key_space:
@@ -217,7 +218,7 @@ class Job(object):
 
         if failed_hosts:
             raise HostIsDown("Following hosts couldn't be reached: {}".format(', '.join(host.fqdn for host in failed_hosts)))
-        
+
         endpoint_mappings = cstar.endpoint_mapping.merge(mappings)
         pickle.dump(dict(endpoint_mappings), open(self.get_cache_file_path("endpoint_mapping"), 'wb'))
         return endpoint_mappings
@@ -233,7 +234,7 @@ class Job(object):
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
               ssh_username, ssh_password, ssh_identity_file, ssh_lib,
-              jmx_username, jmx_password, resolve_hostnames):
+              jmx_username, jmx_password, resolve_hostnames, hosts_variables):
 
         msg("Starting setup")
 
@@ -258,6 +259,7 @@ class Job(object):
         self.jmx_username = jmx_username
         self.jmx_password = jmx_password
         self.resolve_hostnames = resolve_hostnames
+        self.hosts_variables = hosts_variables
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory)
         if not os.path.exists(self.cache_directory):
@@ -445,13 +447,13 @@ class Job(object):
 
     def schedule_job(self, host):
         debug("Running on host", host.fqdn)
-        threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib),
+        threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib, self.get_host_variables(host)),
                          name="cstar %s" % host.fqdn).start()
         time.sleep(self.sleep_on_new_runner)
 
     def _connection(self, host):
         if host not in self._connections:
-            self._connections[host] = cstar.remote.Remote(host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib)
+            self._connections[host] = cstar.remote.Remote(host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib, self.get_host_variables(host))
         return self._connections[host]
 
     def close(self):
@@ -459,3 +461,14 @@ class Job(object):
             if conn:
                 conn.close()
         self._connections = {}
+
+    def get_host_variables(self, host):
+        hostname = host
+        if type(host).__name__ == "Host":
+            hostname = host.fqdn
+
+        host_variables = dict()
+        if hostname in self.hosts_variables.keys():
+            host_variables = self.hosts_variables[hostname]
+        debug("Variables for host {} = {}".format(hostname, host_variables))
+        return host_variables
