@@ -100,7 +100,8 @@ def main():
             ssh_lib=namespace.ssh_lib,
             jmx_username=namespace.jmx_username,
             jmx_password=namespace.jmx_password,
-            resolve_hostnames=namespace.resolve_hostnames)
+            resolve_hostnames=namespace.resolve_hostnames,
+            hosts_variables=namespace.hosts_variables)
         job.run()
 
 
