@@ -80,7 +80,7 @@ def _parse(command_name, filename, definition):
                 arguments.append(Argument(**json.loads(value)))
             else:
                 warn("Ignoring unknown property %s while parsing %s" % (name, filename))
-    
+
     return Command(name=command_name, file=filename,
                    cluster_parallel=cluster_parallel,
                    dc_parallel=dc_parallel,

@@ -8,3 +8,4 @@ cstar.egg-info
 dist
 *~
 venv
+tests/results
