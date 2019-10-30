@@ -47,16 +47,17 @@ class RemoteJobRunner(object):
     This JobRunner is used by cstar
     """
 
-    def __init__(self, job, host, ssh_username, ssh_password, ssh_identity_file, ssh_lib):
+    def __init__(self, job, host, ssh_username, ssh_password, ssh_identity_file, ssh_lib, host_variables):
         self.job = job
         self.host = host
         self.ssh_username = ssh_username
         self.ssh_password = ssh_password
         self.ssh_identity_file = ssh_identity_file
         self.ssh_lib = ssh_lib
+        self.host_variables = host_variables
 
     def __call__(self):
-        with cstar.remote.Remote(self.host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib) as conn:
+        with cstar.remote.Remote(self.host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib, self.host_variables) as conn:
             result = conn.run_job(self.job.command, self.job.job_id, self.job.timeout, self.job.env)
             self.job.results.put((self.host, result))  # This signals the main thread that the job completed.
             save_output(self.job, self.host, result)
@@ -77,7 +78,7 @@ class LocalJobRunner(object):
      This JobRunner is used by cstarpar
     """
 
-    def __init__(self, job, host, ssh_username, ssh_password, ssh_identity_file, ssh_lib):
+    def __init__(self, job, host, ssh_username, ssh_password, ssh_identity_file, ssh_lib, host_variables):
         self.job = job
         self.host = host
 

@@ -32,7 +32,7 @@ _alnum_re = re.compile(r"[^a-zA-Z0-9\|_]")
 
 
 class RemoteSsh2(object):
-    def __init__(self, hostname, ssh_username=None, ssh_password=None, ssh_identity_file=None):
+    def __init__(self, hostname, ssh_username=None, ssh_password=None, ssh_identity_file=None, host_variables=dict()):
         if hasattr(hostname, "ip"):
             self.hostname = hostname.ip
         else:
@@ -86,7 +86,7 @@ class RemoteSsh2(object):
                 if _alnum_re.search(key):
                     raise BadEnvironmentVariable(key)
 
-            env_str = " ".join(key + "=" + self.escape(value) for key, value in env.items())
+            env_str = self._substitute_host_variables(" ".join(key + "=" + self.escape(value) for key, value in env.items()))
             remote_script = resource_string('cstar.resources', 'scripts/remote_job.sh')
             wrapper = remote_script.decode("utf-8") % (env_str,)
             self.write_command(wrapper, "%s/wrapper" % (jobs_dir,))
@@ -101,6 +101,13 @@ class RemoteSsh2(object):
         except:
             err("Command failed : ", sys.exc_info()[0])
             raise BadSSHHost("SSH connection to host %s was reset" % (self.hostname,))
+
+    def _substitute_host_variables(self, env_str):
+        env_str_substituted = env_str
+        for key, value in self.host_variables.items():
+            env_str_substituted = env_str_substituted.replace("{{" + key + "}}", value)
+        
+        return env_str_substituted
 
     def get_job_status(self, jobid):
         pass

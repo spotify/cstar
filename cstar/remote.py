@@ -18,13 +18,13 @@ from cstar.output import debug
 from cstar.exceptions import BadArgument
 
 class Remote(object):
-    def __init__(self, hostname, ssh_username, ssh_password, ssh_identity_file, ssh_lib):
+    def __init__(self, hostname, ssh_username, ssh_password, ssh_identity_file, ssh_lib, host_variables):
         debug("Using ssh lib : ", ssh_lib)
         self.remote = None
         if ssh_lib == 'paramiko':
-            self.remote = RemoteParamiko(hostname, ssh_username, ssh_password, ssh_identity_file)
+            self.remote = RemoteParamiko(hostname, ssh_username, ssh_password, ssh_identity_file, host_variables)
         elif ssh_lib == 'ssh2':
-            self.remote = RemoteSsh2(hostname, ssh_username, ssh_password, ssh_identity_file)
+            self.remote = RemoteSsh2(hostname, ssh_username, ssh_password, ssh_identity_file, host_variables)
         else:
             raise BadArgument("ssh-lib should be either 'paramiko' or 'ssh2' but we got '%s' instead." % (ssh_lib,))
 

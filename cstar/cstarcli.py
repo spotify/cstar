@@ -16,6 +16,7 @@
 
 import argparse
 import getpass
+import json
 import sys
 import uuid
 
@@ -74,8 +75,9 @@ def execute_cleanup(args):
 
 
 def execute_command(args):
-    cstar.output.debug(args)
+    cstar.output.debug(args)    
     command = args.command
+    msg("Command : ", command)
     if bool(args.seed_host) + bool(args.host) + bool(args.host_file) != 1:
         error("Exactly one of --seed-host, --host and --host-file must be used", print_traceback=False)
 
@@ -88,6 +90,13 @@ def execute_command(args):
     if args.host:
         hosts = args.host
 
+
+    hosts_variables = dict()
+
+    if args.hosts_variables:
+        with open(args.hosts_variables) as f:
+            hosts_variables = json.loads(f.read())
+
     with cstar.job.Job() as job:
         env = dict((arg.name, getattr(args, arg.name)) for arg in command.arguments)
         if bool(args.enforced_job_id) == 1:
@@ -98,6 +107,8 @@ def execute_command(args):
             job_id = str(uuid.uuid4())
         msg("Job id is", emph(job_id))
         msg("Running", command.file)
+        msg("env", env)
+        
 
         cstar.signalhandler.print_message_and_save_on_sigint(job, job_id)
 
@@ -125,7 +136,8 @@ def execute_command(args):
             ssh_identity_file=args.ssh_identity_file,
             ssh_lib=args.ssh_lib,
             jmx_username=args.jmx_username,
-            jmx_password=args.jmx_password)
+            jmx_password=args.jmx_password,
+            hosts_variables=hosts_variables)
         job.run()
 
 def validate_uuid4(uuid_string):

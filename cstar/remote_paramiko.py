@@ -26,7 +26,7 @@ _alnum_re = re.compile(r"[^a-zA-Z0-9\|_]")
 
 
 class RemoteParamiko(object):
-    def __init__(self, hostname, ssh_username=None, ssh_password=None, ssh_identity_file=None):
+    def __init__(self, hostname, ssh_username=None, ssh_password=None, ssh_identity_file=None, host_variables=dict()):
         if hasattr(hostname, "ip"):
             self.hostname = hostname.ip
         else:
@@ -36,6 +36,7 @@ class RemoteParamiko(object):
         self.ssh_username = ssh_username
         self.ssh_password = ssh_password
         self.ssh_identity_file = ssh_identity_file
+        self.host_variables = host_variables
         self.client = None
 
     def __enter__(self):
@@ -88,8 +89,10 @@ class RemoteParamiko(object):
             for key in env:
                 if _alnum_re.search(key):
                     raise BadEnvironmentVariable(key)
+            
+            # substitute host variables in the command
+            env_str = self._substitute_host_variables(" ".join(key + "=" + self.escape(value) for key, value in env.items()))
 
-            env_str = " ".join(key + "=" + self.escape(value) for key, value in env.items())
             remote_script = resource_string('cstar.resources', 'scripts/remote_job.sh')
             wrapper = remote_script.decode("utf-8") % (env_str,)
             self.write_command(wrapper, "%s/wrapper" % (dir,))
@@ -107,6 +110,13 @@ class RemoteParamiko(object):
             return ExecutionResult(cmd, real_status, real_output, real_error)
         except (ConnectionResetError, paramiko.ssh_exception.SSHException):
             raise BadSSHHost("SSH connection to host %s was reset" % (self.hostname,))
+
+    def _substitute_host_variables(self, env_str):
+        env_str_substituted = env_str
+        for key, value in self.host_variables.items():
+            env_str_substituted = env_str_substituted.replace("{{" + key + "}}", value)
+        
+        return env_str_substituted
 
     def get_job_status(self, jobid):
         pass

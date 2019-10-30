@@ -69,6 +69,7 @@ class Job(object):
         self.ssh_identity_file = None
         self.jmx_username = None
         self.jmx_password = None
+        self.hosts_variables = dict()
         self.returned_jobs = list()
 
     def __enter__(self):
@@ -181,7 +182,7 @@ class Job(object):
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
               ssh_username, ssh_password, ssh_identity_file, ssh_lib,
-              jmx_username, jmx_password):
+              jmx_username, jmx_password, hosts_variables):
 
         msg("Starting setup")
 
@@ -204,6 +205,7 @@ class Job(object):
         self.ssh_lib = ssh_lib
         self.jmx_username = jmx_username
         self.jmx_password = jmx_password
+        self.hosts_variables = hosts_variables
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory)
 
@@ -389,13 +391,13 @@ class Job(object):
 
     def schedule_job(self, host):
         debug("Running on host", host.fqdn)
-        threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib),
+        threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib, self.get_host_variables(host)),
                          name="cstar %s" % host.fqdn).start()
         time.sleep(self.sleep_on_new_runner)
 
     def _connection(self, host):
         if host not in self._connections:
-            self._connections[host] = cstar.remote.Remote(host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib)
+            self._connections[host] = cstar.remote.Remote(host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib, self.get_host_variables(host))
         return self._connections[host]
 
     def close(self):
@@ -403,3 +405,14 @@ class Job(object):
             if conn:
                 conn.close()
         self._connections = {}
+
+    def get_host_variables(self, host):
+        hostname = host
+        if type(host).__name__ == "Host":
+            hostname = host.fqdn
+
+        host_variables = dict()
+        if hostname in self.hosts_variables.keys():
+            host_variables = self.hosts_variables[hostname]
+        debug("Variables for host {} = {}".format(hostname, host_variables))
+        return host_variables
