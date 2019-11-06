@@ -40,7 +40,7 @@ def _add_destination_arguments(parser):
     parser.add_argument('--node-done-pause-time', type=float, default=0.0,
                         help='The amount of time (in seconds) to pause between a node has finished and the next node starting')
     parser.add_argument('--ssh-lib', type=str, default="paramiko",
-                        help='SSH library to use for remote connections')
+                        help='SSH library to use for remote connections. Should be set to "paramiko"')
     parser.add_argument('--hosts-variables',
                         help='A JSON file containing host specific variables in the form: {"host1": {"var1": "host1_var1", "var2": "host1_var2"}, "host2": {"var1": "host2_var1", "var2": "host2_var2"}}')
 
