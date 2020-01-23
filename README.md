@@ -35,20 +35,6 @@ It's also possible to install straight from repo. This installs the latest versi
 
     # pip install git+https://github.com/spotify/cstar.git
 
-Some systems (like Ubuntu 14.04) might trigger ssh2-python related errors when installing because the locally available libssh2 is too old (<1.6.0).
-In such case, please apply the following procedure : 
-
-```
-sudo apt-get install cmake libssl-dev libffi-dev python3-pip -y
-git clone --recurse-submodules https://github.com/ParallelSSH/ssh2-python.git
-cd ssh2-python; sudo ./ci/install-ssh2.sh
-sudo pip3 install setuptools bcrypt --upgrade
-sudo pip3 install cstar --upgrade
-# or: 
-# sudo pip3 install git+https://github.com/spotify/cstar.git --upgrade
-```
-
-This will build libssh2 from source using the one that ships with ssh2-python and install some required dependencies.
 
 
 ## Code of conduct
@@ -90,8 +76,6 @@ There are two special case invocations:
   to resume.
 
 * One can skip the script name and instead use the `cleanup-jobs`. See [Cleaning up old jobs](#Cleaning-up-old-jobs).
-
-* Two python ssh modules can be used : `paramiko` (default) and `ssh2-python`. To use the faster (but experimental) ssh2-python module add the following flag : `--ssh-lib=ssh2`
 
 * If you need to access the remote cluster with a specific username, add `--ssh-username=remote_username` to your cstar command line. A private key file can also be specified using `--ssh-identity-file=my_key_file.pem`.
 

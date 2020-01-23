@@ -13,20 +13,13 @@
 # limitations under the License.
 
 from cstar.remote_paramiko import RemoteParamiko
-from cstar.remote_ssh2 import RemoteSsh2
 from cstar.output import debug
 from cstar.exceptions import BadArgument
 
 class Remote(object):
     def __init__(self, hostname, ssh_username, ssh_password, ssh_identity_file, ssh_lib):
         debug("Using ssh lib : ", ssh_lib)
-        self.remote = None
-        if ssh_lib == 'paramiko':
-            self.remote = RemoteParamiko(hostname, ssh_username, ssh_password, ssh_identity_file)
-        elif ssh_lib == 'ssh2':
-            self.remote = RemoteSsh2(hostname, ssh_username, ssh_password, ssh_identity_file)
-        else:
-            raise BadArgument("ssh-lib should be either 'paramiko' or 'ssh2' but we got '%s' instead." % (ssh_lib,))
+        self.remote = RemoteParamiko(hostname, ssh_username, ssh_password, ssh_identity_file)
 
     def __enter__(self):
         return self
