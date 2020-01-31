@@ -86,6 +86,9 @@ class State(object):
     def get_idle(self):
         return self.current_topology.without_hosts(self.progress.running)
 
+    def has_pending(self):
+        return len(self.progress.running) + len(self.progress.done) < len(self.current_topology)
+
     def __str__(self):
         return """"State(
     original_topology=%s,
