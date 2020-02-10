@@ -44,10 +44,10 @@ def print_progress(original_topology, progress, down, printer=cstar.output.print
             lines.append("Cluster: " + cluster)
         cluster_topology = original_topology.with_cluster(cluster)
         dcs = sorted(cluster_topology.get_dcs())
-        for dc in dcs:
+        for cluster, dc in dcs:
             if len(dcs):
                 lines.append("DC: " + dc)
-            dc_topology = cluster_topology.with_dc(dc)
+            dc_topology = cluster_topology.with_dc(cluster, dc)
             hosts = sorted(dc_topology, key=lambda x: x.token)
             status = "".join([get_status(host) for host in hosts])
             if len(status) >= 6:

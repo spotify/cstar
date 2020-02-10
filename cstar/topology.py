@@ -19,6 +19,7 @@ from cstar.exceptions import UnknownHost
 Host = namedtuple("Host", "fqdn ip dc cluster token is_up")
 Host.__hash__ = lambda self: self.ip.__hash__()
 
+Datacenter = namedtuple("Datacenter", "cluster dc")
 
 def _host_eq(self, other):
     if hasattr(other, 'ip'):
@@ -54,9 +55,19 @@ class Topology(object):
         """Return subtopology filtered on cluster"""
         return Topology(filter(lambda host: cluster == host.cluster, self.hosts))
 
-    def with_dc(self, dc):
-        """Return subtopology filtered on dc"""
+    def with_dc(self, cluster, dc):
+        """Return subtopology filtered on pair cluster/dc for uniqness concerns"""
+        return Topology(filter(lambda host: dc == host.dc and cluster == host.cluster, self.hosts))
+
+    def with_dc_filter(self, dc):
+        """Retrun subtopology filtered on dc only dc is used,
+           if clusters share a DC name, all clusters will be considered
+           Prefer 'with_dc()' function"""
         return Topology(filter(lambda host: dc == host.dc, self.hosts))
+
+    def without_dcs(self, dcs):
+        """Return subtopology with specific DCs filtered out"""
+        return Topology(filter(lambda host: Datacenter(host.cluster, host.dc) not in dcs, self.hosts))
 
     def without_host(self, host):
         """Return subtopology without specified host"""
@@ -70,9 +81,10 @@ class Topology(object):
         """Returns a set containing all the individual clusters in this topology"""
         return set(host.cluster for host in self.hosts)
 
-    def get_dcs(self):
-        """Returns a set containing all the individual data centers in this topology"""
-        return set(host.dc for host in self.hosts)
+    def get_dcs(self, hosts=None):
+        """Returns a set containing all the individual data centers for given hosts"""
+        subtopology = self if hosts is None else Topology(hosts)
+        return set(Datacenter(host.cluster,host.dc) for host in subtopology.hosts)
 
     def get_down(self):
         """Returns a set of all nodes that are down in this topology"""

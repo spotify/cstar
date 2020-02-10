@@ -39,7 +39,7 @@ It's also possible to install straight from repo. This installs the latest versi
 
 ## Code of conduct
 
-This project adheres to the 
+This project adheres to the
 [Open Code of Conduct](https://github.com/spotify/code-of-conduct/blob/master/code-of-conduct.md).
 By participating, you are expected to honor this code.
 
@@ -62,13 +62,13 @@ The HOST-SPEC specifies what nodes to run the script on. There are three ways to
 
 The command is the name of a script located in either `/usr/lib/cstar/commands` or in
 `~/.cstar/commands`. This script will be uploaded to all nodes in the cluster and executed. File suffixes
-are stripped. The requirements of the script are described below. Cstar comes pre-packaged with one script file 
+are stripped. The requirements of the script are described below. Cstar comes pre-packaged with one script file
 called ``run`` which takes a single parameter ``--command`` - see examples below.
 
 Some additional switches to control cstar:
 
 * One can override the parallelism specified in a script by setting the switches
-  `--cluster-parallelism`, `--dc-parallelism` and `--strategy`.
+  `--cluster-parallel`, `--dc-parallel` and `--strategy`.
 
 There are two special case invocations:
 
@@ -87,7 +87,7 @@ A script file can specify additional parameters.
 
 ## Command syntax
 
-In order to run a command, it is first uploaded to the relevant host, and then executed from there. 
+In order to run a command, it is first uploaded to the relevant host, and then executed from there.
 
 Commands can be written in any scripting language in which the hash symbol starts a line comment, e.g.
 shell-script, python, perl or ruby.
@@ -98,9 +98,9 @@ the script, e.g. `# C* dc-parallel: true`
 
 The possible keys are:
 
-`cluster-parallelism`, can the script be run on multiple clusters in parallel. Default value is `true`.  
+`cluster-parallel`, can the script be run on multiple clusters in parallel. Default value is `true`.  
 
-`dc-parallelism`, can the script be run on multiple data centers in the same cluster in parallel. Default value is `false`.
+`dc-parallel`, can the script be run on multiple data centers in the same cluster in parallel. Default value is `false`.
 
 `strategy`, how many nodes within one data center can the script be run on. Default is `topology`.
 Can be one of:
@@ -112,14 +112,14 @@ Can be one of:
 `description`, specifies a description for the script used in the help message.
 
 `argument`, specifies an additional input parameter for the script, as well as a help text and an
-optional default value. 
+optional default value.
 
 ## Job output
 
-Cstar automatically saves the job status to file during operation. 
+Cstar automatically saves the job status to file during operation.
 
 Standard output, standard error and exit status of each command run against a Cassandra host is
-saved locally on machine where cstar is running. They are available under the users home directory in 
+saved locally on machine where cstar is running. They are available under the users home directory in
 `.cstar/jobs/JOB_ID/HOSTNAME`
 
 ## How jobs are run
@@ -152,13 +152,13 @@ maximum age of a job before it's deleted by using the `--max-job-age` parameter.
 
     # cstar run --command='service cassandra restart' --seed-host some-host
 
-Explanation: Run the local cli command ``service cassandra restart`` on a cluster. If necessary, add ``sudo`` to the 
+Explanation: Run the local cli command ``service cassandra restart`` on a cluster. If necessary, add ``sudo`` to the
 command.
 
     # cstar puppet-upgrade-cassandra --seed-host some-host --puppet-branch=cass-2.2-upgrade
 
 Explanation: Run the command puppet-upgrade-cassandra on a cluster. The puppet-upgrade-cassandra
-command expects a parameter, the puppet branch to run in order to perform the Cassandra upgrade. See the 
+command expects a parameter, the puppet branch to run in order to perform the Cassandra upgrade. See the
 puppet-upgrade-cassandra example [below](#Example-script-file).
 
     # cstar puppet-upgrade-cassandra --help
@@ -173,7 +173,7 @@ The job id is the first line written on any executed job.
 
 ## Example script file
 
-This is an example script file that would saved to `~/.cstar/commands/puppet-upgrade-cassandra.sh`. It upgrades a 
+This is an example script file that would saved to `~/.cstar/commands/puppet-upgrade-cassandra.sh`. It upgrades a
 Cassandra cluster by running puppet on a different branch, then restarting the node, then upgrading the sstables.
 
     # !/usr/bin/env bash
@@ -183,7 +183,7 @@ Cassandra cluster by running puppet on a different branch, then restarting the n
     # C* description: Upgrade one or more clusters by switching to a different puppet branch                                                                                                                       
     # C* argument: {"option":"--snapshot-name", "name":"SNAPSHOT_NAME", "description":"Name of pre-upgrade snapshot", "default":"preupgrade"}                                                                      
     # C* argument: {"option":"--puppet-branch", "name":"PUPPET_BRANCH", "description":"Name of puppet branch to switch to", "required":true}                                                                       
-    
+
     nodetool snapshot -t $SNAPSHOT_NAME
     sudo puppet --branch $PUPPET_BRANCH
     sudo service cassandra restart

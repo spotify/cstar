@@ -160,7 +160,7 @@ class Job(object):
                     describering = cstar.nodetoolparser.parse_nodetool_describering(res.out)
                     range_mapping = cstar.nodetoolparser.convert_describering_to_range_mapping(describering)
                     mappings.append(cstar.endpoint_mapping.parse(range_mapping, topology, lookup=ip_lookup))
-                    
+
             if not has_error:
                 return cstar.endpoint_mapping.merge(mappings)
 
@@ -336,7 +336,7 @@ class Job(object):
                 host, result = self.results.get(timeout=self.timeout)
                 self.returned_jobs.append((host, result))
             self.handle_finished_jobs(self.returned_jobs)
-            
+
             self.wait_for_node_to_return(returned_job[0] for returned_job in self.returned_jobs)
             self.returned_jobs = list()
 

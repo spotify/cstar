@@ -30,7 +30,7 @@ example_job = """#! /bin/bash
 # C* description: Upgrade one or more clusters by switching to a different puppet branch
 # C* argument: {"option":"--snapshot-name", "name":"SNAPSHOT_NAME", "description":"Name of pre-upgrade snapshot", "default":"preupgrade"}
 # C* argument: {"option":"--puppet-branch", "name":"PUPPET_BRANCH", "description":"Name of puppet branch to switch to", "required":true}
-#C* argument: {"option":"--bork", "name":"BORK", "description":"Bork bork bork"}
+# C* argument: {"option":"--bork", "name":"BORK", "description":"Bork bork bork"}
 # argument: {"option":"--bork2", "name":"BORK2", "description":"Bork bork bork"}
 # C argument: {"option":"--bork3", "name":"BORK3", "description":"Bork bork bork"}
 # C** argument: {"option":"--bork4", "name":"BORK4", "description":"Bork bork bork"}
@@ -62,7 +62,7 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(command.dc_parallel, True)
         self.assertEqual(command.cluster_parallel, False)
 
-        self.assertEqual(len(command.arguments), 2)
+        self.assertEqual(len(command.arguments), 3)
         self.assertEqual(command.arguments[0].option, "--snapshot-name")
         self.assertEqual(command.arguments[0].name, "SNAPSHOT_NAME")
         self.assertEqual(command.arguments[0].default, "preupgrade")
