@@ -34,6 +34,15 @@ def print_progress(original_topology, progress, down, printer=cstar.output.print
         if host in down:
             return ":"
         return '.'
+    
+    def get_ordered_status(host):
+        if host in progress.done:
+            return 10
+        if host in progress.running:
+            return 100
+        if host in progress.failed:
+            return 50
+        return 1000
 
     lines = [" +  Done, up      * Executing, up      !  Failed, up      . Waiting, up",
              " -  Done, down    / Executing, down    X  Failed, down    : Waiting, down"]
@@ -48,10 +57,18 @@ def print_progress(original_topology, progress, down, printer=cstar.output.print
             if len(dcs):
                 lines.append("DC: " + dc)
             dc_topology = cluster_topology.with_dc(cluster, dc)
-            hosts = sorted(dc_topology, key=lambda x: x.token)
+            hosts = sorted(dc_topology, key=lambda x: (get_ordered_status(x), x.rack, x.ip))
             status = "".join([get_status(host) for host in hosts])
             if len(status) >= 6:
-                status = status[0:len(status):3] + "\n" + status[1:len(status):3] + "\n" + status[2:len(status):3]
+                splitStatus = list(chunks(status, 3))
+                status = splitStatus[0] + "\n" + splitStatus[1] + "\n" + splitStatus[2]
             lines.append(status)
     lines.append("%d done, %d failed, %d executing" % (len(progress.done), len(progress.failed), len(progress.running)))
     printer("\n".join(lines))
+
+def chunks(l, n):
+    """Yield n number of sequential chunks from l."""
+    d, r = divmod(len(l), n)
+    for i in range(n):
+        si = (d+1)*(i if i < r else r) + d*(0 if i < r else i - r)
+        yield l[si:si+(d+1 if i < r else d)]

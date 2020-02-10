@@ -20,7 +20,8 @@
                 "dc",
                 "cluster",
                 3074457345618258602,
-                true
+                true,
+                "hostId"
             ],
             [
                 "host2",
@@ -28,7 +29,8 @@
                 "dc",
                 "cluster",
                 -3074457345618258603,
-                true
+                true,
+                "hostId"
             ],
             [
                 "host3",
@@ -36,7 +38,8 @@
                 "dc",
                 "cluster",
                 -9223372036854775808,
-                true
+                true,
+                "hostId"
             ]
         ],
         "dc_parallel": true,
@@ -49,7 +52,8 @@
                     "dc",
                     "cluster",
                     3074457345618258602,
-                    true
+                    true,
+                    "hostId"
                 ]
             ],
             "failed": [
@@ -59,7 +63,8 @@
                     "dc",
                     "cluster",
                     -3074457345618258603,
-                    true
+                    true,
+                    "hostId"
                 ]
             ]
         },
@@ -71,7 +76,8 @@
                 "dc",
                 "cluster",
                 3074457345618258602,
-                true
+                true,
+                "hostId"
             ],
             [
                 "host2",
@@ -79,7 +85,8 @@
                 "dc",
                 "cluster",
                 -3074457345618258603,
-                true
+                true,
+                "hostId"
             ],
             [
                 "host3",
@@ -87,7 +94,8 @@
                 "dc",
                 "cluster",
                 -9223372036854775808,
-                true
+                true,
+                "hostId"
             ]
         ],
         "strategy": "topology",
