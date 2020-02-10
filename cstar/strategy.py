@@ -53,7 +53,8 @@ def find_next_host(strategy, topology, endpoint_mapping, progress, cluster_paral
         remaining = remaining.with_cluster(next(iter(progress.running)).cluster)
 
     if progress.running and not dc_parallel:
-        remaining = remaining.with_dc(next(iter(progress.running)).dc)
+        running_host = next(iter(progress.running))
+        remaining = remaining.with_dc(running_host.cluster, running_host.dc)
 
     if not remaining:
         return None
@@ -74,8 +75,7 @@ def _all_find_next_host(remaining, endpoint_mapping, running):
 
 
 def _one_find_next_host(remaining, endpoint_mapping, running):
-    if running:
-        return None
+    remaining = remaining.without_dcs(remaining.get_dcs(running))
     return remaining.first()
 
 

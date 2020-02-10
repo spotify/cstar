@@ -31,9 +31,10 @@ test_topology = Topology((Host("a", IP1, "eu", "cluster1", 0, True), Host("b", I
 class TopologyTest(unittest.TestCase):
 
     def test_with_dc(self):
-        sub = test_topology.with_dc("us")
-        self.assertEqual(len(sub), 3)
+        sub = test_topology.with_dc("cluster1", "us")
+        self.assertEqual(len(sub), 2)
         [self.assertEqual(host.dc, "us") for host in sub]
+        [self.assertEqual(host.cluster, "cluster1") for host in sub]
 
     def test_with_cluster(self):
         sub = test_topology.with_cluster("cluster1")
