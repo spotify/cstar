@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import cstar.endpoint_mapping
-from cstar.nodetoolparser import parse_nodetool_ring
 
 import json
 import socket
@@ -92,30 +91,6 @@ class TopologyTest(unittest.TestCase):
         expected = {"a": set(("b", "c")), "b": set(("c", "a")), "c": set(("a", "b"))}
         merged = cstar.endpoint_mapping.merge((tree1, tree2))
         self.assertEqual(merged, expected)
-
-
-    def test_endpoint_mapping_vnodes(self):
-        with open("tests/resources/ring_vnodes.txt", 'r') as f1:
-            topology = parse_nodetool_ring(f1.read(), 'test_cluster', lambda _: None)
-        with open("tests/resources/describering-vnodes.txt", 'r') as f2:
-            describering = cstar.nodetoolparser.parse_nodetool_describering(f2.read())
-            range_mapping = cstar.nodetoolparser.convert_describering_to_range_mapping(describering)
-            mapping = cstar.endpoint_mapping.parse(range_mapping, topology, lookup=self.ip_lookup)
-            for key in mapping:
-                # since we have no racks and we have vnodes, let's check that all nodes are friends
-                self.assertEqual(5, len(mapping.get(key)))
-
-    def test_endpoint_mapping_vnodes_and_racks(self):
-        with open("tests/resources/ring-vnodes-racks.txt", 'r') as f1:
-            topology = parse_nodetool_ring(f1.read(), 'test_cluster', lambda _: None)
-        with open("tests/resources/describering-vnodes-racks.txt", 'r') as f2:
-            describering = cstar.nodetoolparser.parse_nodetool_describering(f2.read())
-            range_mapping = cstar.nodetoolparser.convert_describering_to_range_mapping(describering)
-            mapping = cstar.endpoint_mapping.parse(range_mapping, topology, lookup=self.ip_lookup)
-            for key in mapping:
-                # since we have no racks and we have vnodes, let's check that all nodes are friends
-                self.assertEqual(4, len(mapping.get(key)))
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,4 +3,4 @@ Cluster Information:
 	Snitch: org.apache.cassandra.locator.DynamicEndpointSnitch
 	Partitioner: org.apache.cassandra.dht.Murmur3Partitioner
 	Schema versions:
-		abc-123: [1.2.3.4 2.3.4.5 3.4.5.6]
+		48fc7f6b-b59d-3ed8-bc63-6e09b575651a: [1.2.3.4 2.3.4.5 3.4.5.6]

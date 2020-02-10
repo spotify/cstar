@@ -71,6 +71,7 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
     cluster_parallel = state['cluster_parallel']
     dc_parallel = state['dc_parallel']
     max_concurrency = state['max_concurrency']
+    resolve_hostnames = state['resolve_hostnames'] if 'resolve_hostnames' in state.keys() else False
 
     progress = cstar.progress.Progress(
         running=[cstar.topology.Host(*arr) for arr in state['progress']['running']],

@@ -125,7 +125,8 @@ def execute_command(args):
             ssh_identity_file=args.ssh_identity_file,
             ssh_lib=args.ssh_lib,
             jmx_username=args.jmx_username,
-            jmx_password=args.jmx_password)
+            jmx_password=args.jmx_password,
+            resolve_hostnames=args.resolve_hostnames)
         job.run()
 
 def validate_uuid4(uuid_string):

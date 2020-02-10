@@ -64,6 +64,8 @@ def _add_strategy_arguments(parser):
                         help='Only run in hosts belonging to the specified data center')
     parser.add_argument('--key-space', '--keyspace',
                         help='The keyspace to use for endpoint mapping calculation. Uses all keypsaces by default.')
+    parser.add_argument('-r', '--resolve-hostnames', dest='resolve_hostnames', action="store_true", default=False,
+                        help='Resolve hostnames of cluster nodes.')
 
 
 def _add_cstar_arguments_without_command(parser):
