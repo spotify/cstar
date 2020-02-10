@@ -56,24 +56,27 @@ def get_example_file():
                 "1.2.3.4",
                 "dc",
                 "cluster",
-                3074457345618258602,
-                true
+                "rack1",
+                true,
+                "hostId"
             ],
             [
                 "host2",
                 "1.2.3.5",
                 "dc",
                 "cluster",
-                -3074457345618258603,
-                true
+                "rack2",
+                true,
+                "hostId"
             ],
             [
                 "host3",
                 "1.2.3.6",
                 "dc",
                 "cluster",
-                -9223372036854775808,
-                true
+                "rack3",
+                true,
+                "hostId"
             ]
         ],
         "progress" : {
@@ -84,16 +87,18 @@ def get_example_file():
                     "1.2.3.4",
                     "dc",
                     "cluster",
-                    3074457345618258602,
-                    true
+                    "rack1",
+                    true,
+                    "hostId"
                 ],
                 [
                     "host2",
                     "1.2.3.5",
                     "dc",
                     "cluster",
-                    -3074457345618258603,
-                    true
+                    "rack2",
+                    true,
+                    "hostId"
                 ]
             ],
             "failed": []
@@ -105,24 +110,27 @@ def get_example_file():
                 "1.2.3.4",
                 "dc",
                 "cluster",
-                3074457345618258602,
-                true
+                "rack1",
+                true,
+                "hostId"
             ],
             [
                 "host2",
                 "1.2.3.5",
                 "dc",
                 "cluster",
-                -3074457345618258603,
-                true
+                "rack2",
+                true,
+                "hostId"
             ],
             [
                 "host3",
                 "1.2.3.6",
                 "dc",
                 "cluster",
-                -9223372036854775808,
-                true
+                "rack3",
+                true,
+                "hostId"
             ]
         ],
         "strategy": "topology",
