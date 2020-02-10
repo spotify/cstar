@@ -55,7 +55,8 @@ def get_example_file():
                 "dc",
                 "cluster",
                 3074457345618258602,
-                true
+                true,
+                "hostId"
             ],
             [
                 "host2",
@@ -63,7 +64,8 @@ def get_example_file():
                 "dc",
                 "cluster",
                 -3074457345618258603,
-                true
+                true,
+                "hostId"
             ],
             [
                 "host3",
@@ -71,7 +73,8 @@ def get_example_file():
                 "dc",
                 "cluster",
                 -9223372036854775808,
-                true
+                true,
+                "hostId"
             ]
         ],
         "dc_parallel": true,
@@ -84,7 +87,8 @@ def get_example_file():
                     "dc",
                     "cluster",
                     3074457345618258602,
-                    true
+                    true,
+                    "hostId"
                 ],
                 [
                     "host2",
@@ -92,7 +96,8 @@ def get_example_file():
                     "dc",
                     "cluster",
                     -3074457345618258603,
-                    true
+                    true,
+                    "hostId"
                 ]
             ],
             "failed": []
@@ -105,7 +110,8 @@ def get_example_file():
                 "dc",
                 "cluster",
                 3074457345618258602,
-                true
+                true,
+                "hostId"
             ],
             [
                 "host2",
@@ -113,7 +119,8 @@ def get_example_file():
                 "dc",
                 "cluster",
                 -3074457345618258603,
-                true
+                true,
+                "hostId"
             ],
             [
                 "host3",
@@ -121,7 +128,8 @@ def get_example_file():
                 "dc",
                 "cluster",
                 -9223372036854775808,
-                true
+                true,
+                "hostId"
             ]
         ],
         "strategy": "topology",

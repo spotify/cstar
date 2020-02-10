@@ -17,21 +17,25 @@ import re
 
 from cstar.topology import Topology, Host
 
-_cluster_name_re = re.compile(r"^\s*Name:\s*(.*)$", re.MULTILINE)
-_schema_version_re = re.compile(r"([0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}): ", re.MULTILINE)
+_state_re = re.compile(r"^[A-Za-z]{2}$")
 _ip_re = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
-_token_re = re.compile(r"^\-?\d+$")
-_status_re = re.compile(r"^[A-Za-z]+$")
-_state_re = re.compile(r"^[A-Za-z]+$")
+_load_re = re.compile(r"^(([0-9]+([,.][0-9]+)?)(\s+)([a-zA-Z]{1,2}))$")
+_tokens_re = re.compile(r"^\d+$")
+_owns_re = re.compile(r"^\d+\.\d+\%$")
+_host_id_re = re.compile(r"^[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$")
+_rack_re = re.compile(r"^\w+$")
 _keyspace_name_re = re.compile(r"^\s*Keyspace\s*:\s*(.*)$", re.MULTILINE)
-
-def parse_describe_cluster(text):
-    return (_cluster_name_re.search(text).group(1), _schema_version_re.search(text).group(1))
 
 
 def _parse_node(line):
     words = line.split()
-    if len(words) == 8 and re.match(_ip_re, words[0]) and re.match(_status_re, words[2]) and re.match(_state_re, words[3]) and re.match(_token_re, words[7]):
+    if len(words) == 8 \
+        and re.match(_state_re, words[0]) \
+        and re.match(_ip_re, words[1]) \
+        and re.match(_tokens_re, words[4]) \
+        and re.match(_owns_re, words[5]) \
+        and re.match(_host_id_re, words[6]) \
+        and re.match(_rack_re, words[7]):
         return words
     else:
         return None
@@ -44,25 +48,21 @@ def _parse_datacenter_name_and_nodes(datacenter_section):
     return (name, [node for node in nodes if node is not None])
 
 
-def parse_nodetool_ring(text, cluster_name, reverse_dns_preheat, resolve_hostnames=False):
+def parse_nodetool_status(text, cluster_name, reverse_dns_preheat, resolve_hostnames=False):
     topology = []
     datacenter_sections = text.split("Datacenter: ")[1:]
     datacenter_names_and_nodes = [_parse_datacenter_name_and_nodes(section) for section in datacenter_sections]
     if resolve_hostnames:
         reverse_dns_preheat([node[0] for (_, nodes) in datacenter_names_and_nodes for node in nodes])
-    for (datacenterName, nodes) in datacenter_names_and_nodes:
+    for (datacenter_name, nodes) in datacenter_names_and_nodes:
         for node in nodes:
-            fqdn = node[0]
+            fqdn = node[1]
             if resolve_hostnames:
                 try:
-                    fqdn=socket.gethostbyaddr(node[0])[0]
+                    fqdn=socket.gethostbyaddr(node[1])[0]
                 except socket.herror:
                     pass
-            topology.append(Host(fqdn=fqdn, ip=node[0], dc=datacenterName, cluster=cluster_name,
-                                 is_up=(node[2] == "Up" and node[3] == "Normal"), token=int(node[7]), host_id=None))
+            topology.append(Host(fqdn=fqdn, ip=node[1], dc=datacenter_name, cluster=cluster_name,
+                                 is_up=(node[0] == "UN"), token=0, host_id=node[5]))
 
     return Topology(topology)
-
-
-def extract_keyspaces_from_cfstats(text):
-    return re.findall(_keyspace_name_re, text)

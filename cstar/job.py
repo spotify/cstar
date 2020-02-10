@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import queue
 import time
 import socket
 import os
 import threading
 import functools
+import pickle
+import sys
 
 import cstar.remote
 import cstar.endpoint_mapping
@@ -30,7 +33,7 @@ import cstar.jobprinter
 import cstar.jobwriter
 from cstar.exceptions import BadSSHHost, NoHostsSpecified, HostIsDown, \
     NoDefaultKeyspace, UnknownHost, FailedExecution
-from cstar.output import msg, debug, emph, info, error
+from cstar.output import msg, debug, emph, info, error, warn
 
 MAX_ATTEMPTS = 3
 
@@ -70,6 +73,11 @@ class Job(object):
         self.jmx_username = None
         self.jmx_password = None
         self.returned_jobs = list()
+        self.cluster_name = None
+        self.schema_version = None
+        self.status_topology_hash = None
+        self.resolve_hostnames = False
+
 
     def __enter__(self):
         return self
@@ -92,18 +100,60 @@ class Job(object):
             conn = self._connection(host)
 
             describe_res = self.run_nodetool(conn, "describecluster")
-            topology_res = self.run_nodetool(conn, "ring")
-
-            if (describe_res.status == 0) and (topology_res.status == 0):
-                cluster_name = cstar.nodetoolparser.parse_describe_cluster(describe_res.out)
-                topology = cstar.nodetoolparser.parse_nodetool_ring(topology_res.out, cluster_name, self.reverse_dns_preheat)
-                return topology
+            status_res = self.run_nodetool(conn, "status")
+            if (describe_res.status == 0) and (status_res.status == 0):
+                (cluster_name, schema_version) = cstar.nodetoolparser.parse_describe_cluster(describe_res.out)
+                status_topology = cstar.nodetoolparser.parse_nodetool_status(status_res.out, cluster_name, self.reverse_dns_preheat, self.resolve_hostnames)
+                self.cluster_name = cluster_name
+                self.schema_version = schema_version
+                self.status_topology_hash = status_topology.get_hash()
+                return self.get_ring_topology(status_topology, cluster_name, schema_version, conn)
 
             count += 1
             if count >= MAX_ATTEMPTS:
                 break
         raise HostIsDown("Could not find any working host while fetching topology. Is Cassandra actually running? Tried the following hosts:",
                          ", ".join(tried_hosts))
+
+
+    def get_ring_topology(self, status_topology, cluster_name, schema_version, conn):
+        ring_topology_cache = self.maybe_get_data_from_cache("ring")
+        if ring_topology_cache is not None:
+            ring_topology_tmp = cstar.topology.Topology(cstar.topology.Host(*arr) for arr in ring_topology_cache)
+        else:
+            debug("No cache found, getting ring topology from the nodes")
+            topology_res = self.run_nodetool(conn, "ring")
+            if topology_res.status == 0:
+                ring_topology_tmp = cstar.nodetoolparser.parse_nodetool_ring(topology_res.out, cluster_name, lambda _: None, self.resolve_hostnames)
+        ring_topology = self.merge_ring_status_topologies(status_topology, ring_topology_tmp)
+        # cache topology
+        pickle.dump(list(ring_topology_tmp), open(self.get_cache_file_path("ring"), 'wb'))
+        
+        return ring_topology
+
+    def get_cache_file_path(self, cache_type):
+        return os.path.join(self.cache_directory, "{}-{}-{}".format(cache_type, self.schema_version, self.status_topology_hash))
+    
+    def maybe_get_data_from_cache(self, cache_type):
+        try:
+            cache_file = self.get_cache_file_path(cache_type)
+            if os.path.exists(cache_file):
+                debug("Getting {} from cache".format(cache_type))
+                cached_data = pickle.load(open(cache_file, 'rb'))
+                return cached_data
+        except Exception:
+            warn("Failed getting data from cache : {}".format(sys.exc_info()[2]))
+        debug("Cache miss for {}".format(cache_type))
+        return None
+
+    def merge_ring_status_topologies(self, status_topology, ring_topology):
+        topology = []
+        for host in ring_topology.hosts:
+            status_host = status_topology.hosts_by_ip.get(host.ip)
+            topology.append(cstar.topology.Host(fqdn=host.fqdn, ip=host.ip, dc=host.dc, cluster=host.cluster,
+                                 is_up=status_host.is_up, token=host.token, host_id=status_host.host_id))
+        return cstar.topology.Topology(topology)
+
 
     def reverse_dns_preheat(self, ips):
         if self.is_preheated:
@@ -137,6 +187,11 @@ class Job(object):
     def get_endpoint_mapping(self, topology):
         count = 0
         tried_hosts = []
+        
+        endpoint_mappings = self.maybe_get_data_from_cache("endpoint_mapping")
+        if endpoint_mappings is not None:
+            return endpoint_mappings
+
         for host in topology.get_up():
             tried_hosts.append(host)
             conn = self._connection(host)
@@ -149,7 +204,7 @@ class Job(object):
                 keyspaces = self.get_keyspaces(conn)
             has_error = True
             for keyspace in keyspaces:
-                if not keyspace in ['system', 'system_schema']:
+                if not keyspace.startswith("system"):
                     debug("Fetching endpoint mapping for keyspace", keyspace)
                     res = self.run_nodetool(conn, *("describering", keyspace))
                     has_error = False
@@ -162,7 +217,9 @@ class Job(object):
                     mappings.append(cstar.endpoint_mapping.parse(range_mapping, topology, lookup=ip_lookup))
 
             if not has_error:
-                return cstar.endpoint_mapping.merge(mappings)
+                endpoint_mappings = cstar.endpoint_mapping.merge(mappings)
+                pickle.dump(dict(endpoint_mappings), open(self.get_cache_file_path("endpoint_mapping"), 'wb'))
+                return endpoint_mappings
 
             count += 1
             if count >= MAX_ATTEMPTS:
@@ -181,7 +238,7 @@ class Job(object):
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
               ssh_username, ssh_password, ssh_identity_file, ssh_lib,
-              jmx_username, jmx_password):
+              jmx_username, jmx_password, resolve_hostnames):
 
         msg("Starting setup")
 
@@ -196,6 +253,7 @@ class Job(object):
         self.job_runner = job_runner
         self.key_space = key_space
         self.output_directory = output_directory or os.path.expanduser("~/.cstar/jobs/" + job_id)
+        self.cache_directory = os.path.expanduser("~/.cstar/cache")
         self.sleep_on_new_runner = sleep_on_new_runner
         self.sleep_after_done = sleep_after_done
         self.ssh_username = ssh_username
@@ -204,8 +262,11 @@ class Job(object):
         self.ssh_lib = ssh_lib
         self.jmx_username = jmx_username
         self.jmx_password = jmx_password
+        self.resolve_hostnames = resolve_hostnames
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory)
+        if not os.path.exists(self.cache_directory):
+            os.makedirs(self.cache_directory)
 
         msg("Loading cluster topology")
         if seeds:

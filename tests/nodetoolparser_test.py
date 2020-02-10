@@ -14,6 +14,7 @@
 
 import cstar.nodetoolparser
 import cstar.nodetoolparser.describering
+import cstar.nodetoolparser.status
 import cstar.exceptions
 
 import unittest
@@ -25,17 +26,25 @@ class NodetoolParserTest(unittest.TestCase):
 
     def test_parse_describecluster(self):
         with open("tests/resources/describecluster-2.0.txt", 'r') as f:
-            name = cstar.nodetoolparser.parse_describe_cluster(f.read())
+            nodetool_output = f.read()
+            (name, schema_version) = cstar.nodetoolparser.parse_describe_cluster(nodetool_output)
             self.assertEqual(name, "c2.0.13")
+            self.assertEqual(schema_version, "08428c1c-086b-322c-ae61-988129270360")
         with open("tests/resources/describecluster-2.2.txt", 'r') as f:
-            name = cstar.nodetoolparser.parse_describe_cluster(f.read())
+            nodetool_output = f.read()
+            (name, schema_version) = cstar.nodetoolparser.parse_describe_cluster(nodetool_output)
             self.assertEqual(name, "fnorp")
+            self.assertEqual(schema_version, "48fc7f6b-b59d-3ed8-bc63-6e09b575651a")
         with open("tests/resources/describecluster-3.0.txt", 'r') as f:
-            name = cstar.nodetoolparser.parse_describe_cluster(f.read())
+            nodetool_output = f.read()
+            (name, schema_version) = cstar.nodetoolparser.parse_describe_cluster(nodetool_output)
             self.assertEqual(name, "c3.0.13")
+            self.assertEqual(schema_version, "48fc7f6b-b59d-3ed8-bc63-6e09b575651a")
         with open("tests/resources/describecluster-3.11.txt", 'r') as f:
-            name = cstar.nodetoolparser.parse_describe_cluster(f.read())
+            nodetool_output = f.read()
+            (name, schema_version) = cstar.nodetoolparser.parse_describe_cluster(nodetool_output)
             self.assertEqual(name, "c3111")
+            self.assertEqual(schema_version, "d8210030-20a4-3f05-b2ef-ea154a6d8ef6")
 
     def test_parse_nodetool_ring(self):
         with open("tests/resources/nodetool_ring-2.0.txt", 'r') as f:
@@ -183,6 +192,16 @@ class NodetoolParserTest(unittest.TestCase):
             self.assertEqual("-9223372036854775806", range_mapping[0]["startToken"])
             self.assertEqual("-9223372036854775806", range_mapping[2]["endToken"])
             self.assertEqual(['127.0.0.2', '127.0.0.3', '127.0.0.1'], range_mapping[0]["endpoints"])
+
+    def test_parse_nodetool_status(self):
+        with open("tests/resources/status-2.2.txt", 'r') as f:
+            topology = cstar.nodetoolparser.parse_nodetool_status(f.read(), 'test_cluster', lambda _: None)
+            nodes = topology.hosts
+            self.assertEqual(9, len(nodes))
+            self.assertEqual("11.111.111.111", topology.get_host("11.111.111.111").ip)
+            self.assertEqual(False, topology.get_host("11.111.111.115").is_up)
+            self.assertEqual(True, topology.get_host("11.111.111.116").is_up)
+            self.assertEqual("dc1", topology.get_host("11.111.111.112").dc)
 
 
 if __name__ == '__main__':

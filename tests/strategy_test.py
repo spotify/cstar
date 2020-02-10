@@ -23,10 +23,10 @@ from cstar.strategy import Strategy, find_next_host, HostIsDown
 def make_topology(size, has_down_host=False):
     test_topology = []
     for i in range(size):
-        test_topology.append(Host("a%d" % i, "1.2.3.%d" % i, "eu", "cluster1", i * 100, not has_down_host))
-        test_topology.append(Host("b%d" % i, "2.2.3.%d" % i, "us", "cluster1", (i * 100) + 1, True))
-        test_topology.append(Host("c%d" % i, "3.2.3.%d" % i, "eu", "cluster2", i * 100, True))
-        test_topology.append(Host("d%d" % i, "4.2.3.%d" % i, "us", "cluster2", (i * 100) + 1, True))
+        test_topology.append(Host("a%d" % i, "1.2.3.%d" % i, "eu", "cluster1", i * 100, not has_down_host, "hostId"))
+        test_topology.append(Host("b%d" % i, "2.2.3.%d" % i, "us", "cluster1", (i * 100) + 1, True, "hostId"))
+        test_topology.append(Host("c%d" % i, "3.2.3.%d" % i, "eu", "cluster2", i * 100, True, "hostId"))
+        test_topology.append(Host("d%d" % i, "4.2.3.%d" % i, "us", "cluster2", (i * 100) + 1, True, "hostId"))
     return Topology(test_topology)
 
 

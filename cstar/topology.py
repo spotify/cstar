@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from collections import namedtuple
+import hashlib
 
 from cstar.exceptions import UnknownHost
 
-Host = namedtuple("Host", "fqdn ip dc cluster token is_up")
+Host = namedtuple("Host", "fqdn ip dc cluster token is_up host_id")
 Host.__hash__ = lambda self: self.ip.__hash__()
 
 Datacenter = namedtuple("Datacenter", "cluster dc")
@@ -38,6 +39,7 @@ class Topology(object):
 
     def __init__(self, hosts=[]):
         self.hosts = set(hosts)
+        self.hosts_by_ip = {host.ip:host for host in self.hosts}
 
     def first(self):
         """Return first host in topology (by cluster position)"""
@@ -93,6 +95,10 @@ class Topology(object):
     def get_up(self):
         """Returns a set of all nodes that are up in this topology"""
         return Topology(node for node in self if node.is_up)
+    
+    def get_hash(self):
+        """Computes a hash for the current topology of the cluster"""
+        return hashlib.md5(next(iter(self.get_clusters())).encode('utf-8') + '-'.join(sorted(host.host_id for host in set(self.hosts))).encode('utf-8')).hexdigest()
 
     def __contains__(self, o):
         return self.hosts.__contains__(o)
