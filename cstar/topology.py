@@ -17,7 +17,7 @@ import hashlib
 
 from cstar.exceptions import UnknownHost
 
-Host = namedtuple("Host", "fqdn ip dc cluster token is_up host_id")
+Host = namedtuple("Host", "fqdn ip dc cluster rack is_up host_id")
 Host.__hash__ = lambda self: self.ip.__hash__()
 
 Datacenter = namedtuple("Datacenter", "cluster dc")
@@ -45,7 +45,7 @@ class Topology(object):
         """Return first host in topology (by cluster position)"""
         if not self:
             return None
-        return sorted(self.hosts, key=lambda x: x.token)[0]
+        return sorted(self.hosts, key=lambda x: x.rack)[0]
 
     def get_host(self, ip):
         for h in self:

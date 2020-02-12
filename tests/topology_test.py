@@ -24,18 +24,18 @@ IP3 = "2.3.4.6"
 IP4 = "2.3.4.7"
 IP5 = "2.3.4.8"
 
-test_topology = Topology((Host("a", IP1, "eu", "cluster1", 0, True, 'host1'), Host("b", IP2, "eu", "cluster1", 10, True, 'host2'),
-                          Host("c", IP3, "us", "cluster1", 1, True, 'host3'), Host("d", IP4, "us", "cluster1", 11, True, 'host4'),
-                          Host("e", IP5, "us", "cluster2", 0, True, 'host5')))
+test_topology = Topology((Host("a", IP1, "eu", "cluster1", "rac1", True, 'host1'), Host("b", IP2, "eu", "cluster1", "rac1", True, 'host2'),
+                          Host("c", IP3, "us", "cluster1", "rac1", True, 'host3'), Host("d", IP4, "us", "cluster1", "rac1", True, 'host4'),
+                          Host("e", IP5, "us", "cluster2", "rac1", True, 'host5')))
 
-test_topology_a = Topology((Host("a", IP1, "eu", "cluster1", 0, True, 'host1'), Host("b", IP2, "eu", "cluster1", 10, True, 'host2'),
-                          Host("c", IP3, "us", "cluster1", 1, True, 'host3'), Host("d", IP4, "us", "cluster1", 11, True, 'host4')))
+test_topology_a = Topology((Host("a", IP1, "eu", "cluster1", "rac1", True, 'host1'), Host("b", IP2, "eu", "cluster1", "rac1", True, 'host2'),
+                          Host("c", IP3, "us", "cluster1", "rac1", True, 'host3'), Host("d", IP4, "us", "cluster1", "rac1", True, 'host4')))
 
-test_topology_b = Topology((Host("a", IP1, "eu", "cluster1", 10, True, 'host1'), Host("b", IP2, "eu", "cluster1", 12, True, 'host2'),
-                          Host("c", IP3, "us", "cluster1", 11, True, 'host3'), Host("d", IP4, "us", "cluster1", 14, True, 'host4')))
+test_topology_b = Topology((Host("a", IP1, "eu", "cluster1", "rac1", True, 'host1'), Host("b", IP2, "eu", "cluster1", "rac1", True, 'host2'),
+                          Host("c", IP3, "us", "cluster1", "rac1", True, 'host3'), Host("d", IP4, "us", "cluster1", "rac1", True, 'host4')))
 
-test_topology_c = Topology((Host("a", IP1, "eu", "cluster1", 10, True, 'host1'), Host("b", IP2, "eu", "cluster1", 12, True, 'host6'),
-                          Host("c", IP3, "us", "cluster1", 11, True, 'host3'), Host("d", IP4, "us", "cluster1", 14, True, 'host4')))
+test_topology_c = Topology((Host("a", IP1, "eu", "cluster1", "rac1", True, 'host1'), Host("b", IP2, "eu", "cluster1", "rac1", True, 'host6'),
+                          Host("c", IP3, "us", "cluster1", "rac1", True, 'host3'), Host("d", IP4, "us", "cluster1", "rac1", True, 'host4')))
 
 class TopologyTest(unittest.TestCase):
 
@@ -52,12 +52,12 @@ class TopologyTest(unittest.TestCase):
         self.assertEqual(len(test_topology.hosts_by_ip.keys()), 5)
 
     def test_without_host(self):
-        sub = test_topology.without_host(Host("a", IP1, "eu", "cluster1", 0, True, 'host1'))
+        sub = test_topology.without_host(Host("a", IP1, "eu", "cluster1", "rac1", True, 'host1'))
         self.assertEqual(len(sub), 4)
 
     def test_without_hosts(self):
         sub = test_topology.without_hosts(
-            (Host("a", IP1, "eu", "cluster1", 0, True, 'host1'), Host("b", IP2, "eu", "cluster1", 10, True, 'host2')))
+            (Host("a", IP1, "eu", "cluster1", "rac1", True, 'host1'), Host("b", IP2, "eu", "cluster1", "rac1", True, 'host2')))
         self.assertEqual(len(sub), 3)
     
     def test_cluster_hash_match(self):

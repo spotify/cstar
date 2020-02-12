@@ -54,7 +54,7 @@ def get_example_file():
                 "1.2.3.4",
                 "dc",
                 "cluster",
-                3074457345618258602,
+                "rack1",
                 true,
                 "hostId"
             ],
@@ -63,7 +63,7 @@ def get_example_file():
                 "1.2.3.5",
                 "dc",
                 "cluster",
-                -3074457345618258603,
+                "rack2",
                 true,
                 "hostId"
             ],
@@ -72,7 +72,7 @@ def get_example_file():
                 "1.2.3.6",
                 "dc",
                 "cluster",
-                -9223372036854775808,
+                "rack3",
                 true,
                 "hostId"
             ]
@@ -86,7 +86,7 @@ def get_example_file():
                     "1.2.3.4",
                     "dc",
                     "cluster",
-                    3074457345618258602,
+                    "rack1",
                     true,
                     "hostId"
                 ],
@@ -95,7 +95,7 @@ def get_example_file():
                     "1.2.3.5",
                     "dc",
                     "cluster",
-                    -3074457345618258603,
+                    "rack2",
                     true,
                     "hostId"
                 ]
@@ -109,7 +109,7 @@ def get_example_file():
                 "1.2.3.4",
                 "dc",
                 "cluster",
-                3074457345618258602,
+                "rack1",
                 true,
                 "hostId"
             ],
@@ -118,7 +118,7 @@ def get_example_file():
                 "1.2.3.5",
                 "dc",
                 "cluster",
-                -3074457345618258603,
+                "rack2",
                 true,
                 "hostId"
             ],
@@ -127,7 +127,7 @@ def get_example_file():
                 "1.2.3.6",
                 "dc",
                 "cluster",
-                -9223372036854775808,
+                "rack3",
                 true,
                 "hostId"
             ]

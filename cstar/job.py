@@ -107,29 +107,13 @@ class Job(object):
                 self.cluster_name = cluster_name
                 self.schema_version = schema_version
                 self.status_topology_hash = status_topology.get_hash()
-                return self.get_ring_topology(status_topology, cluster_name, schema_version, conn)
+                return status_topology
 
             count += 1
             if count >= MAX_ATTEMPTS:
                 break
         raise HostIsDown("Could not find any working host while fetching topology. Is Cassandra actually running? Tried the following hosts:",
                          ", ".join(tried_hosts))
-
-
-    def get_ring_topology(self, status_topology, cluster_name, schema_version, conn):
-        ring_topology_cache = self.maybe_get_data_from_cache("ring")
-        if ring_topology_cache is not None:
-            ring_topology_tmp = cstar.topology.Topology(cstar.topology.Host(*arr) for arr in ring_topology_cache)
-        else:
-            debug("No cache found, getting ring topology from the nodes")
-            topology_res = self.run_nodetool(conn, "ring")
-            if topology_res.status == 0:
-                ring_topology_tmp = cstar.nodetoolparser.parse_nodetool_ring(topology_res.out, cluster_name, lambda _: None, self.resolve_hostnames)
-        ring_topology = self.merge_ring_status_topologies(status_topology, ring_topology_tmp)
-        # cache topology
-        pickle.dump(list(ring_topology_tmp), open(self.get_cache_file_path("ring"), 'wb'))
-        
-        return ring_topology
 
     def get_cache_file_path(self, cache_type):
         return os.path.join(self.cache_directory, "{}-{}-{}".format(cache_type, self.schema_version, self.status_topology_hash))
@@ -145,15 +129,6 @@ class Job(object):
             warn("Failed getting data from cache : {}".format(sys.exc_info()[2]))
         debug("Cache miss for {}".format(cache_type))
         return None
-
-    def merge_ring_status_topologies(self, status_topology, ring_topology):
-        topology = []
-        for host in ring_topology.hosts:
-            status_host = status_topology.hosts_by_ip.get(host.ip)
-            topology.append(cstar.topology.Host(fqdn=host.fqdn, ip=host.ip, dc=host.dc, cluster=host.cluster,
-                                 is_up=status_host.is_up, token=host.token, host_id=status_host.host_id))
-        return cstar.topology.Topology(topology)
-
 
     def reverse_dns_preheat(self, ips):
         if self.is_preheated:

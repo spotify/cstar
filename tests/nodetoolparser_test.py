@@ -46,68 +46,6 @@ class NodetoolParserTest(unittest.TestCase):
             self.assertEqual(name, "c3111")
             self.assertEqual(schema_version, "d8210030-20a4-3f05-b2ef-ea154a6d8ef6")
 
-    def test_parse_nodetool_ring(self):
-        with open("tests/resources/nodetool_ring-2.0.txt", 'r') as f:
-            topology = cstar.nodetoolparser.parse_nodetool_ring(f.read(), 'test_cluster', lambda _: None)
-            nodes = topology.hosts
-            self.assertEqual(3, len(nodes))
-            self.assertEqual("127.0.0.1", topology.get_host("127.0.0.1").ip)
-            self.assertEqual(False, topology.get_host("127.0.0.3").is_up)
-            self.assertEqual(True, topology.get_host("127.0.0.1").is_up)
-            self.assertEqual(-9223372036854775808, topology.get_host("127.0.0.1").token)
-            self.assertEqual("datacenter1", topology.get_host("127.0.0.1").dc)
-        with open("tests/resources/nodetool_ring-2.2.txt", 'r') as f:
-            topology = cstar.nodetoolparser.parse_nodetool_ring(f.read(), 'test_cluster', lambda _: None)
-            nodes = topology.hosts
-            self.assertEqual(9, len(nodes))
-            self.assertEqual("1.159.15.53", topology.get_host("1.159.15.53").ip)
-            self.assertEqual(False, topology.get_host("1.146.20.131").is_up)
-            self.assertEqual(-9223372036854775806, topology.get_host("1.159.15.53").token)
-            self.assertEqual("dc1", topology.get_host("1.159.15.53").dc)
-            self.assertEqual("dc3", topology.get_host("1.145.23.52").dc)
-        with open("tests/resources/nodetool_ring-3.0.txt", 'r') as f:
-            topology = cstar.nodetoolparser.parse_nodetool_ring(f.read(), 'test_cluster', lambda _: None)
-            nodes = topology.hosts
-            self.assertEqual(3, len(nodes))
-            self.assertEqual("127.0.0.1", topology.get_host("127.0.0.1").ip)
-            self.assertEqual(False, topology.get_host("127.0.0.3").is_up)
-            self.assertEqual(True, topology.get_host("127.0.0.1").is_up)
-            self.assertEqual(-9223372036854775808, topology.get_host("127.0.0.1").token)
-            self.assertEqual("datacenter1", topology.get_host("127.0.0.1").dc)
-        with open("tests/resources/nodetool_ring-3.11.txt", 'r') as f:
-            topology = cstar.nodetoolparser.parse_nodetool_ring(f.read(), 'test_cluster', lambda _: None)
-            nodes = topology.hosts
-            self.assertEqual(3, len(nodes))
-            self.assertEqual("127.0.0.1", topology.get_host("127.0.0.1").ip)
-            self.assertEqual(False, topology.get_host("127.0.0.3").is_up)
-            self.assertEqual(True, topology.get_host("127.0.0.1").is_up)
-            self.assertEqual(-9223372036854775808, topology.get_host("127.0.0.1").token)
-            self.assertEqual("datacenter1", topology.get_host("127.0.0.1").dc)
-        with open("tests/resources/ring_state_changes.txt", 'r') as f:
-            topology = cstar.nodetoolparser.parse_nodetool_ring(f.read(), 'test_cluster', lambda _: None)
-            nodes = topology.hosts
-            self.assertEqual(9, len(nodes))
-            self.assertEqual("1.159.15.53", topology.get_host("1.159.15.53").ip)
-            self.assertEqual(False, topology.get_host("1.159.15.53").is_up)
-            self.assertEqual(False, topology.get_host("1.154.15.51").is_up)
-            self.assertEqual(False, topology.get_host("1.158.15.54").is_up)
-            self.assertEqual(True, topology.get_host("1.133.36.89").is_up)
-            self.assertEqual(False, topology.get_host("1.146.20.131").is_up)
-            self.assertEqual(-9223372036854775806, topology.get_host("1.159.15.53").token)
-            self.assertEqual("dc1", topology.get_host("1.159.15.53").dc)
-            self.assertEqual("dc3", topology.get_host("1.145.23.52").dc)
-            
-    def test_parse_nodetool_ring_with_vnodes(self):
-        with open("tests/resources/ring_vnodes.txt", 'r') as f:
-            topology = cstar.nodetoolparser.parse_nodetool_ring(f.read(), 'test_cluster', lambda _: None)
-            nodes = topology.hosts
-            self.assertEqual(6, len(nodes))
-            self.assertEqual("127.0.0.1", topology.get_host("127.0.0.1").ip)
-            self.assertEqual(True, topology.get_host("127.0.0.3").is_up)
-            self.assertEqual(True, topology.get_host("127.0.0.1").is_up)
-            self.assertEqual(-9186465342292526055, topology.get_host("127.0.0.1").token)
-            self.assertEqual("datacenter1", topology.get_host("127.0.0.1").dc)
-
     def test_tokenize(self):
         with open("tests/resources/describering-2.2.txt", 'r') as f:
             tokens = cstar.nodetoolparser.describering._tokenize(f.read())

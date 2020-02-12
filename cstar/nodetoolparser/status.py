@@ -33,7 +33,6 @@ def _parse_node(line):
         and re.match(_state_re, words[0]) \
         and re.match(_ip_re, words[1]) \
         and re.match(_tokens_re, words[4]) \
-        and re.match(_owns_re, words[5]) \
         and re.match(_host_id_re, words[6]) \
         and re.match(_rack_re, words[7]):
         return words
@@ -63,6 +62,6 @@ def parse_nodetool_status(text, cluster_name, reverse_dns_preheat, resolve_hostn
                 except socket.herror:
                     pass
             topology.append(Host(fqdn=fqdn, ip=node[1], dc=datacenter_name, cluster=cluster_name,
-                                 is_up=(node[0] == "UN"), token=0, host_id=node[5]))
+                                 is_up=(node[0] == "UN"), rack=node[6], host_id=node[5]))
 
     return Topology(topology)
