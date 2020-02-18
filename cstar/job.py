@@ -250,7 +250,7 @@ class Job(object):
                 current_topology = current_topology | self.get_cluster_topology((seed,))
             original_topology = current_topology
             if dc_filter:
-                original_topology = original_topology.with_dc(dc_filter)
+                original_topology = original_topology.with_dc(next(iter(current_topology.get_clusters())), dc_filter)
         else:
             current_topology = cstar.topology.Topology()
             hosts_ip_set = set(socket.gethostbyname(host) for host in hosts)
