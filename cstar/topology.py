@@ -59,6 +59,14 @@ class Topology(object):
         """Return subtopology filtered on pair cluster/dc for uniqness concerns"""
         return Topology(filter(lambda host: dc == host.dc and cluster == host.cluster, self.hosts))
 
+    def with_dc_or_distinct_cluster(self, hosts=None):
+        """Return subtopology with DCs of passed hosts or DCs in a distinct cluster"""
+        all_dcs = self.get_dcs()
+        running_dcs = self.get_dcs(hosts)
+        clusters = set(cluster_dc.cluster for cluster_dc in running_dcs)
+        return Topology(filter(lambda host: Datacenter(host.cluster, host.dc) in running_dcs
+                                      or host.cluster not in clusters, self.hosts))
+
     def with_dc_filter(self, dc):
         """Retrun subtopology filtered on dc only dc is used,
            if clusters share a DC name, all clusters will be considered

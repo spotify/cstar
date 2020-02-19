@@ -53,8 +53,7 @@ def find_next_host(strategy, topology, endpoint_mapping, progress, cluster_paral
         remaining = remaining.with_cluster(next(iter(progress.running)).cluster)
 
     if progress.running and not dc_parallel:
-        running_host = next(iter(progress.running))
-        remaining = remaining.with_dc(running_host.cluster, running_host.dc)
+        remaining = remaining.with_dc_or_distinct_cluster(progress.running)
 
     if not remaining:
         return None

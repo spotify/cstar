@@ -135,13 +135,18 @@ class Job(object):
         return cstar.nodetoolparser.extract_keyspaces_from_cfstats(cfstats_output.out)
 
     def get_endpoint_mapping(self, topology):
-        count = 0
-        tried_hosts = []
-        for host in topology.get_up():
-            tried_hosts.append(host)
-            conn = self._connection(host)
+        clusters = []
+        failed_hosts = []
+        mappings = []
 
-            mappings = []
+        for host in topology.get_up():
+            if host.cluster in clusters:
+                # We need to fetch keyspaces on one node per cluster, no more.
+                continue
+
+            count = 0
+            clusters.append(host.cluster)
+            conn = self._connection(host)
 
             if self.key_space:
                 keyspaces = [self.key_space]
@@ -161,14 +166,15 @@ class Job(object):
                     range_mapping = cstar.nodetoolparser.convert_describering_to_range_mapping(describering)
                     mappings.append(cstar.endpoint_mapping.parse(range_mapping, topology, lookup=ip_lookup))
 
-            if not has_error:
-                return cstar.endpoint_mapping.merge(mappings)
-
-            count += 1
             if count >= MAX_ATTEMPTS:
+                failed_hosts += host
                 break
-        raise HostIsDown("Could not find any working host while fetching endpoint mapping. Tried the following hosts:",
-                         ", ".join(host.fqdn for host in tried_hosts))
+            count += 1
+
+        if failed_hosts:
+            raise HostIsDown("Following hosts couldn't be reached: {}".format(', '.join(host.fqdn for host in failed_hosts)))
+
+        return cstar.endpoint_mapping.merge(mappings)
 
     def run_nodetool(self, conn, *cmds):
         if self.jmx_username and self.jmx_password:
@@ -186,8 +192,8 @@ class Job(object):
         msg("Starting setup")
 
         msg("Strategy:", cstar.strategy.serialize(strategy))
-        msg("DC parallel:", dc_parallel)
         msg("Cluster parallel:", cluster_parallel)
+        msg("DC parallel:", dc_parallel)
 
         self.command = command
         self.job_id = job_id
@@ -214,7 +220,7 @@ class Job(object):
                 current_topology = current_topology | self.get_cluster_topology((seed,))
             original_topology = current_topology
             if dc_filter:
-                original_topology = original_topology.with_dc(dc_filter)
+                original_topology = original_topology.with_dc_filter(dc_filter)
         else:
             current_topology = cstar.topology.Topology()
             hosts_ip_set = set(socket.gethostbyname(host) for host in hosts)
