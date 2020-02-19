@@ -55,6 +55,7 @@ def _topology_map(mapping, topology):
     for raw_host, raw_friends in mapping.items():
         friends = (topology.get_host(raw_friend) for raw_friend in raw_friends)
         host = topology.get_host(raw_host)
-        filtered_friends = set(friend for friend in friends if friend.dc == host.dc)
+        filtered_friends = set(friend for friend in friends
+                               if friend.cluster == host.cluster and friend.dc == host.dc)
         res[host] = filtered_friends
     return res

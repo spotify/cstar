@@ -26,7 +26,7 @@ def make_topology(size, has_down_host=False):
         test_topology.append(Host("a%d" % i, "1.2.3.%d" % i, "eu", "cluster1", i * 100, not has_down_host))
         test_topology.append(Host("b%d" % i, "2.2.3.%d" % i, "us", "cluster1", (i * 100) + 1, True))
         test_topology.append(Host("c%d" % i, "3.2.3.%d" % i, "eu", "cluster2", i * 100, True))
-        test_topology.append(Host("d%d" % i, "4.2.3.%d" % i, "us", "cluster2", (i * 100) + 1, True))
+        test_topology.append(Host("d%d" % i, "4.2.3.%d" % i, "sto", "cluster2", (i * 100) + 1, True))
     return Topology(test_topology)
 
 
@@ -91,19 +91,11 @@ class StrategyTest(unittest.TestCase):
         state = State(top, Strategy.ALL, None, True, False)
 
         state = add_work(state)
-        self.assertEqual(len(state.progress.running), 3)
+        self.assertEqual(len(state.progress.running), 6)
         state = finish_work(state)
 
         state = add_work(state)
-        self.assertEqual(len(state.progress.running), 3)
-        state = finish_work(state)
-
-        state = add_work(state)
-        self.assertEqual(len(state.progress.running), 3)
-        state = finish_work(state)
-
-        state = add_work(state)
-        self.assertEqual(len(state.progress.running), 3)
+        self.assertEqual(len(state.progress.running), 6)
         state = finish_work(state)
 
     def test_all_per_cluster(self):
@@ -144,7 +136,7 @@ class StrategyTest(unittest.TestCase):
         self.assertEqual(len(state.progress.running), 4)
         state = finish_work(state)
 
-    def test_topology_parallel(self):
+    def test_topology_all_parallel(self):
         top = make_topology(size=12)
         mapping = make_mapping(top)
 
@@ -160,7 +152,39 @@ class StrategyTest(unittest.TestCase):
             state = finish_work(state)
         self.assertEqual(3, laps)
 
-    def test_topology_serial(self):
+    def test_topology_parallel_clusters_serial_dcs(self):
+        top = make_topology(size=12)
+        mapping = make_mapping(top)
+
+        state = State(top, Strategy.TOPOLOGY, mapping, True, False)
+
+        laps = 0
+        while True:
+            state = add_work(state)
+            if len(state.progress.running) == 0:
+                break
+            laps = laps + 1
+            self.assertEqual(len(state.progress.running), 8)
+            state = finish_work(state)
+        self.assertEqual(6, laps)
+
+    def test_topology_serial_clusters_parallel_dcs(self):
+        top = make_topology(size=12)
+        mapping = make_mapping(top)
+
+        state = State(top, Strategy.TOPOLOGY, mapping, False, True)
+
+        laps = 0
+        while True:
+            state = add_work(state)
+            if len(state.progress.running) == 0:
+                break
+            laps = laps + 1
+            self.assertEqual(len(state.progress.running), 8)
+            state = finish_work(state)
+        self.assertEqual(6, laps)
+
+    def test_topology_all_serial(self):
         top = make_topology(size=12)
         mapping = make_mapping(top)
 
