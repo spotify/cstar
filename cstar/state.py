@@ -31,15 +31,15 @@ class State(object):
     This type is meant to be used without mutating it."""
 
     def __init__(
-            self, original_topology, strategy, endpoint_mapping, cluster_parallel, dc_parallel,
-            max_concurrency=None, progress=None, current_topology=None, stop_after=None,
-            ignore_down_nodes=False):
+            self, original_topology, strategy, endpoint_mapping, cluster_parallel, dc_parallel, dc_filter=None,
+            max_concurrency=None, progress=None, current_topology=None, stop_after=None, ignore_down_nodes=False):
         self.original_topology = original_topology
         self.current_topology = current_topology or original_topology
         self.strategy = strategy
         self.endpoint_mapping = endpoint_mapping
         self.cluster_parallel = cluster_parallel
         self.dc_parallel = dc_parallel
+        self.dc_filter = dc_filter
         self.max_concurrency = max_concurrency
         self.progress = progress or cstar.progress.Progress()
         self.stop_after = stop_after

@@ -48,6 +48,8 @@ def get_example_file():
     "ssh_lib": "paramiko",
     "state": {
         "cluster_parallel": true,
+        "dc_parallel": true,
+        "dc_filter": "gew",
         "current_topology": [
             [
                 "host1",
@@ -74,7 +76,6 @@ def get_example_file():
                 true
             ]
         ],
-        "dc_parallel": true,
         "progress" : {
             "running": [],
             "done": [
@@ -156,6 +157,10 @@ class JobReaderTest(unittest.TestCase):
         self.assertEqual(len(job.state.current_topology), 3)
         self.assertEqual(len(job.state.original_topology), 3)
         self.assertEqual(type(job.state.original_topology.first()), cstar.topology.Host)
+        # Check options are passed:
+        self.assertEqual(job.state.cluster_parallel, True)
+        self.assertEqual(job.state.dc_parallel, True)
+        self.assertEqual(job.state.dc_filter, "gew")
 
     def test_old_job(self):
         job = cstar.job.Job()
@@ -182,7 +187,7 @@ class JobReaderTest(unittest.TestCase):
             cstar.jobreader._parse(f.read(), "tests/resources/failed_job.json", output_directory, job, job_id, stop_after, max_days,
                                endpoint_mapper=lambda x: {}, retry=False)
             self.assertEqual(len(job.state.progress.failed), 1)
-        
+
     def test_do_not_retry_failed_job(self):
         job = cstar.job.Job()
         job_id = "1234"
