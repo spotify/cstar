@@ -140,6 +140,10 @@ class NodetoolParserTest(unittest.TestCase):
             self.assertEqual(False, topology.get_host("11.111.111.115").is_up)
             self.assertEqual(True, topology.get_host("11.111.111.116").is_up)
             self.assertEqual("dc1", topology.get_host("11.111.111.112").dc)
+            self.assertEqual("a6234243-8abd-435e-b822-838bc4749160", topology.get_host("11.111.111.111").host_id)
+            self.assertEqual("rac2", topology.get_host("11.111.111.112").rack)
+            self.assertEqual("97123467-7dab-4a9e-bd44-5613ac419961", topology.get_host("11.111.111.119").host_id)
+            
 
 
 if __name__ == '__main__':

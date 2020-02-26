@@ -62,6 +62,6 @@ def parse_nodetool_status(text, cluster_name, reverse_dns_preheat, resolve_hostn
                 except socket.herror:
                     pass
             topology.append(Host(fqdn=fqdn, ip=node[1], dc=datacenter_name, cluster=cluster_name,
-                                 is_up=(node[0] == "UN"), rack=node[6], host_id=node[5]))
+                                 is_up=(node[0] == "UN"), rack=node[7], host_id=node[6]))
 
     return Topology(topology)
