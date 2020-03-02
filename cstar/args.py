@@ -120,3 +120,4 @@ def _add_ssh_arguments(parser):
 
 def _add_jmx_auth_arguments(parser):
     parser.add_argument('--jmx-username', help='JMX username', default=None)
+    parser.add_argument('--jmx-passwordfile', help='JMX password file', default=None)
