@@ -117,6 +117,7 @@ def _add_ssh_arguments(parser):
     parser.add_argument('--ssh-username', help='Username for ssh connection', default=None)
     parser.add_argument('--ssh-password', help='Password for ssh connection', default=None)
     parser.add_argument('--ssh-identity-file', help='Identity file for ssh connection', default=None)
+    parser.add_argument('--ssh-allow-agent', help='Allow loading ssh keys from agent', action='store_true', default=False)
 
 def _add_jmx_auth_arguments(parser):
     parser.add_argument('--jmx-username', help='JMX username', default=None)

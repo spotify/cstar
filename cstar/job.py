@@ -69,6 +69,7 @@ class Job(object):
         self.ssh_identity_file = None
         self.jmx_username = None
         self.jmx_password = None
+        self.ssh_allow_agent = None
         self.returned_jobs = list()
 
     def __enter__(self):
@@ -187,7 +188,7 @@ class Job(object):
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
               ssh_username, ssh_password, ssh_identity_file, ssh_lib,
-              jmx_username, jmx_password):
+              jmx_username, jmx_password, ssh_allow_agent):
 
         msg("Starting setup")
 
@@ -210,6 +211,7 @@ class Job(object):
         self.ssh_lib = ssh_lib
         self.jmx_username = jmx_username
         self.jmx_password = jmx_password
+        self.ssh_allow_agent = ssh_allow_agent
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory)
 
@@ -395,13 +397,13 @@ class Job(object):
 
     def schedule_job(self, host):
         debug("Running on host", host.fqdn)
-        threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib),
+        threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib, self.ssh_allow_agent),
                          name="cstar %s" % host.fqdn).start()
         time.sleep(self.sleep_on_new_runner)
 
     def _connection(self, host):
         if host not in self._connections:
-            self._connections[host] = cstar.remote.Remote(host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib)
+            self._connections[host] = cstar.remote.Remote(host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib, self.ssh_allow_agent)
         return self._connections[host]
 
     def close(self):

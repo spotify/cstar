@@ -99,7 +99,8 @@ def main():
             ssh_identity_file = namespace.ssh_identity_file,
             ssh_lib=namespace.ssh_lib,
             jmx_username=namespace.jmx_username,
-            jmx_password=namespace.jmx_password)
+            jmx_password=namespace.jmx_password,
+            ssh_allow_agent=args.ssh_allow_agent)
         job.run()
 
 
