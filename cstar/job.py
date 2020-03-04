@@ -103,7 +103,7 @@ class Job(object):
             if count >= MAX_ATTEMPTS:
                 break
         raise HostIsDown("Could not find any working host while fetching topology. Is Cassandra actually running? Tried the following hosts:",
-                         ", ".join(tried_hosts))
+                         ", ".join([x.ip for x in tried_hosts]))
 
     def reverse_dns_preheat(self, ips):
         if self.is_preheated:
