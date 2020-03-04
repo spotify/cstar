@@ -65,6 +65,17 @@ def _add_strategy_arguments(parser):
     parser.add_argument('--key-space', '--keyspace',
                         help='The keyspace to use for endpoint mapping calculation. Uses all keypsaces by default.')
 
+    parser.add_argument('--one', dest='strategy_one', action="store_true", default=False, required=False,
+                        help='Run on one node of one data center at the time and for each cluster')
+    parser.add_argument('--one-per-dc', dest='strategy_one_per_dc', action="store_true", default=False, required=False,
+                        help='Run on one node on all data centers at once and for each cluster')
+    parser.add_argument('--topology', dest='strategy_topology', action="store_true", default=False, required=False,
+                        help='Run on all the nodes that are not having shared ranges, on one data center at the time and for each cluster')
+    parser.add_argument('--topology-per-dc', dest='strategy_topology_per_dc', action="store_true", default=False, required=False,
+                        help='Run on all the nodes that are not having shared ranges, on all the data centers at once and for each cluster')
+    parser.add_argument('--all', dest='strategy_all', action="store_true", default=False, required=False,
+                        help='Run on all nodes, on all data centers at once and for each cluster ')
+
 
 def _add_cstar_arguments_without_command(parser):
     """Argument parsing for case when cstar is called without specifying a command to run"""

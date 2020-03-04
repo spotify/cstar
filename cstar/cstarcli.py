@@ -15,6 +15,7 @@
 """Argument parsing and related plumbing for the cstar command"""
 
 import argparse
+import copy
 import getpass
 import sys
 import uuid
@@ -79,6 +80,8 @@ def execute_command(args):
     if bool(args.seed_host) + bool(args.host) + bool(args.host_file) != 1:
         error("Exactly one of --seed-host, --host and --host-file must be used", print_traceback=False)
 
+    computed_args = args_from_strategy_shortcut(copy.deepcopy(args))
+
     hosts = None
 
     if args.host_file:
@@ -106,9 +109,9 @@ def execute_command(args):
             seeds=args.seed_host,
             command=command.file,
             job_id=job_id,
-            strategy=cstar.strategy.parse(fallback(args.strategy, command.strategy, "topology")),
+            strategy=cstar.strategy.parse(fallback(computed_args.strategy, args.strategy, command.strategy, "topology")),
             cluster_parallel=fallback(args.cluster_parallel, command.cluster_parallel, False),
-            dc_parallel=fallback(args.dc_parallel, command.dc_parallel, False),
+            dc_parallel=fallback(computed_args.dc_parallel, args.dc_parallel, command.dc_parallel, False),
             max_concurrency=args.max_concurrency,
             timeout=args.timeout,
             env=env,
@@ -135,6 +138,58 @@ def validate_uuid4(uuid_string):
         return False
 
     return str(val) == uuid_string
+
+def args_from_strategy_shortcut(args):
+    """Returns args
+    Takes command options and a strategy shortcut in:
+    {--one, --one-per-dc, --topology, --topology-per-dc, --all}
+    Returns options (args) with --strategy and --dc-parallel set accordingly
+    """
+
+    strategy_shortcuts = {
+                            "--one": int(args.strategy_one),
+                            "--one-per-dc": int(args.strategy_one_per_dc),
+                            "--topology": int(args.strategy_topology),
+                            "--topology-per-dc": int(args.strategy_topology_per_dc),
+                            "--all": int(args.strategy_all)}
+
+    total_shortcuts_used = sum(strategy_shortcuts.values())
+
+    if total_shortcuts_used > 1:
+        error("Exactly one of {} must be used".format(', '.join(strategy_shortcuts.keys())), print_traceback=False)
+
+    if total_shortcuts_used == 1:
+        if args.strategy is not None:
+            error("--strategy option is not compatible with {} options that "
+                  "defines the stratgy already".format(', '.join(strategy_shortcuts.keys())), print_traceback=False)
+        elif args.dc_parallel is not None:
+            error("--dc-parallel option is not compatible with {} options "
+                  "that defines the stratgy already".format(', '.join(strategy_shortcuts.keys())), print_traceback=False)
+        else:
+            # Identify the strategy_?* option used
+            for (k, v) in strategy_shortcuts.items():
+                if v == 1:
+                    # Set corresponding option
+                    if k == "--one":
+                        args.strategy = "one"
+                        args.dc_parallel = False
+                    elif k == "--one-per-dc":
+                        args.strategy = "one"
+                        args.dc_parallel = True
+                    elif k == "--topology":
+                        args.strategy = "topology"
+                        args.dc_parallel = False
+                    elif k == "--topology-per-dc":
+                        args.strategy = "topology"
+                        args.dc_parallel = True
+                    elif k == "--all":
+                        args.strategy = "all"
+                        args.dc_parallel = True
+                    else:
+                        error("Unknown shortcut option: {}".format(k))
+
+    return args
+
 
 
 def main():
