@@ -70,6 +70,7 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
     strategy = cstar.strategy.parse(state['strategy'])
     cluster_parallel = state['cluster_parallel']
     dc_parallel = state['dc_parallel']
+    dc_filter = state['dc_filter'] if 'dc_filter' in state else None
     max_concurrency = state['max_concurrency']
 
     progress = cstar.progress.Progress(
@@ -79,7 +80,7 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
 
     if retry==True:
         progress.failed = set([])
-    
+
     original_topology = cstar.topology.Topology(cstar.topology.Host(*arr) for arr in state['original_topology'])
     current_topology = cstar.topology.Topology(cstar.topology.Host(*arr) for arr in state['current_topology'])
 
@@ -97,6 +98,7 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
         endpoint_mapping=endpoint_mapping,
         cluster_parallel=cluster_parallel,
         dc_parallel=dc_parallel,
+        dc_filter=dc_filter,
         max_concurrency=max_concurrency,
         current_topology=current_topology,
         stop_after=stop_after,

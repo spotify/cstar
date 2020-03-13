@@ -82,7 +82,7 @@ class StrategyTest(unittest.TestCase):
 
     def test_max_concurrency(self):
         top = make_topology(size=3)
-        state = State(top, Strategy.ALL, None, True, True, 10)
+        state = State(top, Strategy.ALL, None, True, True, max_concurrency=10)
         state = add_work(state)
         self.assertEqual(len(state.progress.running), 10)
 

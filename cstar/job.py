@@ -243,9 +243,10 @@ class Job(object):
             endpoint_mapping = None
             msg("Skipping endpoint mapping because of selected strategy")
 
-        self.state = cstar.state.State(original_topology, strategy, endpoint_mapping, cluster_parallel, dc_parallel,
-                                       max_concurrency, current_topology=current_topology, stop_after=stop_after,
-                                       ignore_down_nodes=ignore_down_nodes)
+        self.state = cstar.state.State(original_topology, strategy, endpoint_mapping,
+                                       cluster_parallel, dc_parallel, dc_filter=dc_filter,
+                                       max_concurrency=max_concurrency, current_topology=current_topology,
+                                       stop_after=stop_after, ignore_down_nodes=ignore_down_nodes)
         msg("Setup done")
 
     def update_current_topology(self, skip_nodes=()):
