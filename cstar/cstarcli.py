@@ -83,7 +83,7 @@ def execute_command(args):
 
     if args.host_file:
         with open(args.host_file) as f:
-            hosts = f.readlines()
+            hosts = f.read().splitlines()
 
     if args.host:
         hosts = args.host
