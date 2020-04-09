@@ -117,9 +117,9 @@ class RemoteParamiko(object):
             cmd = " ".join(self.escape(s) for s in argv)
 
             stdin, stdout, stderr = self.client.exec_command(cmd)
-            status = stdout.channel.recv_exit_status()
             out = stdout.read()
             error = stderr.read()
+            status = stdout.channel.recv_exit_status()
             if status != 0:
                 err("Command %s failed with status %d on host %s" % (cmd, status, self.hostname))
             else:
