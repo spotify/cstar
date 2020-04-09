@@ -120,7 +120,7 @@ class Job(object):
             return threading.Thread(target=lambda: get_host_by_addr(ip))
 
         print("Preheating DNS cache")
-        threads = [create_lookup_thread(ip) for ip in ips]
+        threads = [create_lookup_thread(ip) for ip in set(ips)]
 
         for thread in threads:
             thread.start()
