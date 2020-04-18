@@ -64,6 +64,11 @@ class RemoteParamiko(object):
                 debug("Id file: ", self.ssh_identity_file)
                 self.client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
                 self.client.connect(self.hostname, compress=True, username=self.ssh_username, password=self.ssh_password, pkey=pkey)
+
+                # Enable keepalive to improve connection stability when running commands that return no output for
+                # long periods of time.
+                transport = self.client.get_transport()
+                transport.set_keepalive(5)
             except:
                 self.client = None
                 raise BadSSHHost("Could not establish an SSH connection to host %s" % (self.hostname,))
