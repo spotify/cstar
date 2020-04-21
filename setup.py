@@ -50,7 +50,7 @@ setup(name='cstar',
           'Programming Language :: Python :: 3.6',
           'Topic :: Database'
       ],
-      install_requires=['paramiko==2.3.3'],
+      install_requires=['paramiko==2.7.1'],
       python_requires='>=3',
       packages=('cstar', 'cstar.nodetoolparser', 'cstar.resources'),
       package_data={'cstar.resources': ['commands/*', 'scripts/*']},
