@@ -20,7 +20,7 @@ import os
 import sys
 
 # circleci.py version
-VERSION = '0.8.0'
+VERSION = '0.8.1-dev'
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
