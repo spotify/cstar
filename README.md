@@ -13,7 +13,7 @@ Ansible does not have the primitives required to run things in a topology aware 
 split the C* cluster into groups that can be safely executed in parallel and run one group at a time.
 But unless the job takes almost exactly the same amount of time to run on every host, such a solution
 would run with a significantly lower rate of parallelism, not to mention it would be kludgy enough to
- be unpleasant to work with.
+be unpleasant to work with.
 
 Unfortunately, Fabric is not thread safe, so the same type of limitations apply. Fabric allows one to
 run a job in parallel on many machines, but with similar restrictions as those of Ansible groups.

@@ -20,7 +20,10 @@ import os
 import sys
 
 # circleci.py version
-VERSION = '0.7.4'
+VERSION = '0.8.0'
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
@@ -41,6 +44,8 @@ setup(name='cstar',
       author_email='rebase-squad@spotify.com',
       url='https://github.com/spotify/cstar',
       description='Apache Cassandra cluster orchestration tool for the command line',
+      long_description=long_description,
+      long_description_content_type="text/markdown",
       license='Apache-2.0',
       classifiers=[
           'Development Status :: 4 - Beta',
