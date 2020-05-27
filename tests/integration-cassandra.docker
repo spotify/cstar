@@ -1,0 +1,26 @@
+FROM cassandra:3.11.6
+
+RUN apt-get update && apt-get install -y openssh-server wait-for-it
+RUN mkdir /var/run/sshd
+RUN echo 'root:root' | chpasswd
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+# only needed from cstar node
+RUN sed -i 's/#   StrictHostKeyChecking ask/   StrictHostKeyChecking no/' /etc/ssh/ssh_config
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+
+ENV CASSANDRA_HOME /opt/cassandra
+ENV CASSANDRA_CONF /etc/cassandra
+ENV PATH $CASSANDRA_HOME/bin:$PATH
+
+# the following are required also for non-interactive commands, so preprend them to /etc/bash.bashrc
+RUN sed -i '1s;^;export PATH=/opt/cassandra/bin:$PATH\n;' /etc/bash.bashrc
+RUN sed -i '1s;^;export JAVA_HOME=/opt/java/openjdk\n;' /etc/bash.bashrc
+
+EXPOSE 22
+ENTRYPOINT ( [ -z ${CASSANDRA_WAIT_ON+x} ] || wait-for-it -t 180 $CASSANDRA_WAIT_ON:9042 ) && service ssh start && docker-entrypoint.sh
+CMD ["cassandra", "-f"]
