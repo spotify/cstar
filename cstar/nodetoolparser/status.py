@@ -23,7 +23,7 @@ _load_re = re.compile(r"^(([0-9]+([,.][0-9]+)?)(\s+)([a-zA-Z]{1,2}))$")
 _tokens_re = re.compile(r"^\d+$")
 _owns_re = re.compile(r"^\d+\.\d+\%$")
 _host_id_re = re.compile(r"^[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$")
-_rack_re = re.compile(r"^(?=.*-)[\w -]+$")
+_rack_re = re.compile(r"^(?=.*)[\w -]+$")
 _keyspace_name_re = re.compile(r"^\s*Keyspace\s*:\s*(.*)$", re.MULTILINE)
 
 
