@@ -357,7 +357,7 @@ class Job(object):
     def resume_on_running_hosts(self):
         for host in self.state.progress.running:
             debug("Resume on host", host.fqdn)
-            threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib),
+            threading.Thread(target=self.job_runner(self, host, self.ssh_username, self.ssh_password, self.ssh_identity_file, self.ssh_lib, self.hosts_variables),
                              name="cstar %s" % host.fqdn).start()
             time.sleep(self.sleep_on_new_runner)
 
