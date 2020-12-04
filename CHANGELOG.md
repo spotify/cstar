@@ -1,5 +1,15 @@
 ## Change Log
 
+### 0.8.1 (2020/12/04 09:00 +00:00)
+- [a9bbc3d](https://github.com/spotify/cstar/commit/a9bbc3d8c8bed7d7b76d78358ee856b0805179a1) Fix error when continuing a job with the cache (@adejanovski)
+- [e7232d2](https://github.com/spotify/cstar/commit/e7232d28b0b938a50b8300aa89c1e4e177d0b8e3) Fix missing host_variables on resuming jobs with running hosts (@adejanovski)
+- [5374ac8](https://github.com/spotify/cstar/commit/5374ac8648433cc2a59b212735507e5d460acae2) Fix regex for rack string to include dashes (@ivanmp91)
+- [185e4b6](https://github.com/spotify/cstar/commit/185e4b6b80e1910ae78769eb84fe6fdd091a413c) Update regex (@ivanmp91)
+- [331409d](https://github.com/spotify/cstar/commit/331409dd8d271a9395dffc165f94fd7f1f3dfe2f) Add host specific variables (@adejanovski)
+- [8719458](https://github.com/spotify/cstar/commit/8719458f80628a6eac1b09ebc9afb0261159d5cd) fix jobreader variable naming (@adejanovski)
+- [9091b6c](https://github.com/spotify/cstar/commit/9091b6c026b6ac402297b0801916540ae709dd49) Add integration tests (@adejanovski)
+- [a466694](https://github.com/spotify/cstar/commit/a4666941f3731d4a44e21b352b36acf5f12eebb9) Create a docker-compose setup that creates a Cassandra cluster with sshd, to run the cstar integration tests in. (@michaelsembwever)
+
 ### 0.8.0 (2020/05/20 12:19 +00:00)
 - [c545395](https://github.com/spotify/cstar/commit/c545395d4e19cae12939a51a5ac57e9dc3ec1ced) Paramiko sometimes hangs if the buffer is too big. (@npeshek-spotx)
 - [e95a0e7](https://github.com/spotify/cstar/commit/e95a0e740f2b9c86dd27e3f4d96393b780707a83) Remove code duplication of #40 (@rzvoncek)
