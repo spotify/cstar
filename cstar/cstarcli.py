@@ -18,6 +18,7 @@ import argparse
 import copy
 import getpass
 import json
+import os
 import sys
 import uuid
 
@@ -48,6 +49,17 @@ def get_commands():
         sub = cstar.command.load(name)
         result[name] = sub
     return result
+
+
+def get_password():
+    password = ''
+    password_from_env = os.getenv('JMX_PASSWORD')
+    if password_from_env:
+        msg('Taking JMX password from JMX_PASSWORD environment variable')
+        password = password_from_env
+    else:
+        password = getpass.getpass(prompt="JMX Password ")
+    return password
 
 
 def execute_continue(args):
@@ -217,7 +229,7 @@ def main():
     namespace = parser.parse_args(sys.argv[1:])
 
     if namespace.jmx_username:
-        namespace.jmx_password = getpass.getpass(prompt="JMX Password ")
+        namespace.jmx_password = get_password()
     else:
         namespace.jmx_password = None
 
