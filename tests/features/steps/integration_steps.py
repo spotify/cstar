@@ -110,6 +110,7 @@ def run_job(context, command, strategy, job_id, stop_after=None):
                     ssh_lib="paramiko",
                     jmx_username=None,
                     jmx_password=None,
+                    jmx_passwordfile=None,
                     resolve_hostnames=True,
                     hosts=None,
                     hosts_variables=dict())

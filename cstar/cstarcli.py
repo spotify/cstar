@@ -60,7 +60,7 @@ def execute_continue(args):
             error(e)
         msg("Resuming job", job.job_id)
 
-        if job.jmx_username:
+        if job.jmx_username and not job.jmx_passwordfile:
             job.jmx_password = getpass.getpass(prompt="JMX Password ")
 
         msg("Running ", job.command)
@@ -139,6 +139,7 @@ def execute_command(args):
             ssh_lib=args.ssh_lib,
             jmx_username=args.jmx_username,
             jmx_password=args.jmx_password,
+            jmx_passwordfile=args.jmx_passwordfile,
             resolve_hostnames=args.resolve_hostnames,
             hosts_variables=hosts_variables)
         job.run()
@@ -216,7 +217,7 @@ def main():
 
     namespace = parser.parse_args(sys.argv[1:])
 
-    if namespace.jmx_username:
+    if namespace.jmx_username and not namespace.jmx_passwordfile:
         namespace.jmx_password = getpass.getpass(prompt="JMX Password ")
     else:
         namespace.jmx_password = None
