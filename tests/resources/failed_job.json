@@ -43,7 +43,7 @@
             ]
         ],
         "dc_parallel": true,
-        "progress" : {
+        "progress": {
             "running": [],
             "done": [
                 [
@@ -103,6 +103,7 @@
     },
     "timeout": null,
     "jmx_username": null,
+    "jmx_passwordfile": null,
     "version": 8,
     "hosts_variables": null
 }

@@ -138,6 +138,7 @@ def get_example_file():
     },
     "timeout": null,
     "jmx_username": null,
+    "jmx_passwordfile": null,
     "version": 8,
     "hosts_variables": null
 }

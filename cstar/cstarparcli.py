@@ -49,7 +49,7 @@ def parse_job_mode():
 def main():
     namespace = parse_job_mode()
 
-    if namespace.jmx_username:
+    if namespace.jmx_username and not namespace.jmx_passwordfile:
         namespace.jmx_password = getpass.getpass(prompt="JMX Password ")
     else:
         namespace.jmx_password = None
@@ -100,6 +100,7 @@ def main():
             ssh_lib=namespace.ssh_lib,
             jmx_username=namespace.jmx_username,
             jmx_password=namespace.jmx_password,
+            jmx_passwordfile=namespace.jmx_passwordfile,
             resolve_hostnames=namespace.resolve_hostnames,
             hosts_variables=namespace.hosts_variables)
         job.run()
