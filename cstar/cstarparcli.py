@@ -16,6 +16,7 @@
 
 import argparse
 import getpass
+import json
 import sys
 import uuid
 
@@ -68,6 +69,12 @@ def main():
 
     cstar.output.configure(namespace.verbose)
 
+    hosts_variables = dict()
+
+    if namespace.hosts_variables:
+        with open(namespace.hosts_variables) as f:
+            hosts_variables = json.loads(f.read())
+
     with cstar.job.Job() as job:
         env = {}
         job_id = str(uuid.uuid4())
@@ -101,7 +108,7 @@ def main():
             jmx_username=namespace.jmx_username,
             jmx_password=namespace.jmx_password,
             resolve_hostnames=namespace.resolve_hostnames,
-            hosts_variables=namespace.hosts_variables)
+            hosts_variables=hosts_variables)
         job.run()
 
 
