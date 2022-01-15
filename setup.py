@@ -25,6 +25,7 @@ VERSION = '0.8.2-dev'
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
     description = 'verify that the git tag matches our version'
@@ -37,6 +38,7 @@ class VerifyVersionCommand(install):
                 tag, VERSION
             )
             sys.exit(info)
+
 
 setup(name='cstar',
       version=VERSION,
@@ -55,7 +57,7 @@ setup(name='cstar',
           'Programming Language :: Python :: 3.6',
           'Topic :: Database'
       ],
-      install_requires=['paramiko==2.7.1'],
+      install_requires=['paramiko~=2.7'],
       python_requires='>=3',
       packages=('cstar', 'cstar.nodetoolparser', 'cstar.resources'),
       package_data={'cstar.resources': ['commands/*', 'scripts/*']},
@@ -68,4 +70,4 @@ setup(name='cstar',
       cmdclass={
           'verify': VerifyVersionCommand,
       }
-)
+      )
