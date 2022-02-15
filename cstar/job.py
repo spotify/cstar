@@ -71,6 +71,8 @@ class Job(object):
         self.ssh_username = None
         self.ssh_password = None
         self.ssh_identity_file = None
+        self.use_sudo = None
+        self.sudo_args = None
         self.jmx_username = None
         self.jmx_password = None
         self.jmx_passwordfile = None
@@ -225,15 +227,24 @@ class Job(object):
         return endpoint_mappings
 
     def run_nodetool(self, conn, *cmds):
-        if self.jmx_username and self.jmx_password:
-            return conn.run(("nodetool", "-u", self.jmx_username, "-pw", self.jmx_password, *cmds))
-        elif self.jmx_username and self.jmx_passwordfile:
-            return conn.run(("nodetool", "-u", self.jmx_username, "-pwf", self.jmx_passwordfile, *cmds))
-        else:
-            return conn.run(("nodetool", *cmds))
+        sudo=[]
+        if self.use_sudo:
+            sudo.append('sudo')
+            if self.sudo_args:
+                sudo.append(self.sudo_args.split())
+
+        jmx_args=[]
+        if self.jmx_username:
+            jmx_args.extend(["-u", self.jmx_username])
+            if self.jmx_password:
+                jmx_args.extend(["-pw", self.jmx_password])
+            if self.jmx_passwordfile:
+                jmx_args.extend(["-pwf", self.jmx_passwordfile])
+
+        return conn.run((*sudo, "nodetool", *jmx_args, *cmds))
 
     def setup(self, hosts, seeds, command, job_id, strategy, cluster_parallel, dc_parallel, job_runner,
-              max_concurrency, timeout, env, stop_after, key_space, output_directory,
+              max_concurrency, timeout, env, use_sudo, sudo_args, stop_after, key_space, output_directory,
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
               ssh_username, ssh_password, ssh_identity_file, ssh_lib,
@@ -259,6 +270,8 @@ class Job(object):
         self.ssh_password = ssh_password
         self.ssh_identity_file = ssh_identity_file
         self.ssh_lib = ssh_lib
+        self.use_sudo = use_sudo
+        self.sudo_args = sudo_args
         self.jmx_username = jmx_username
         self.jmx_password = jmx_password
         self.jmx_passwordfile = jmx_passwordfile

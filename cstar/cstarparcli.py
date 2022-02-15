@@ -105,6 +105,8 @@ def main():
             ssh_password = namespace.ssh_password,
             ssh_identity_file = namespace.ssh_identity_file,
             ssh_lib=namespace.ssh_lib,
+            use_sudo=namespace.use_sudo,
+            sudo_args=namespace.sudo_args,
             jmx_username=namespace.jmx_username,
             jmx_password=namespace.jmx_password,
             jmx_passwordfile=namespace.jmx_passwordfile,
