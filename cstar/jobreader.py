@@ -65,6 +65,8 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
     job.ssh_identity_file = data['ssh_identity_file']
     job.ssh_password = data['ssh_password']
     job.ssh_lib = data['ssh_lib']
+    job.use_sudo = data['use_sudo']
+    job.sudo_args = data['sudo_args']
     job.jmx_username = data['jmx_username']
     job.jmx_passwordfile = data['jmx_passwordfile']
     job.hosts_variables = data['hosts_variables']

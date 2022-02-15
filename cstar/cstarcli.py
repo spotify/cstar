@@ -125,6 +125,8 @@ def execute_command(args):
             max_concurrency=args.max_concurrency,
             timeout=args.timeout,
             env=env,
+            use_sudo=args.use_sudo,
+            sudo_args=args.sudo_args,
             stop_after=args.stop_after,
             job_runner=cstar.jobrunner.RemoteJobRunner,
             key_space=args.key_space,

@@ -32,6 +32,10 @@ def _add_destination_arguments(parser):
 
     parser.add_argument('--host-file',
                         help='A file containing one or more hosts to run the script on (newline separated)')
+    parser.add_argument('--use-sudo', action="store_true", default=False,
+                        help='Run the nodetool commands as root via sudo')
+    parser.add_argument('--sudo-args', type=str, default="",
+                        help='The nodetool commands sudo arguments')
     # The amount of time in seconds to sleep after spinning up a new runner.
     # Spinning up too many things at once seems to cause timeouts. Not sure
     #  if it's paramiko being slow or what, but this seems to help.

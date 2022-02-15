@@ -101,9 +101,11 @@
         "strategy": "topology",
         "ignore_down_nodes": false
     },
+    "sudo_args": "",
     "timeout": null,
     "jmx_username": null,
     "jmx_passwordfile": null,
+    "use_sudo": false,
     "version": 8,
     "hosts_variables": null
 }

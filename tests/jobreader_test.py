@@ -136,9 +136,11 @@ def get_example_file():
         "strategy": "topology",
         "ignore_down_nodes": false
     },
+    "sudo_args": "",
     "timeout": null,
     "jmx_username": null,
     "jmx_passwordfile": null,
+    "use_sudo": "false",
     "version": 8,
     "hosts_variables": null
 }
@@ -154,6 +156,7 @@ class JobReaderTest(unittest.TestCase):
         max_days = 999999
         output_directory = "/som/dir"
         filename = output_directory + "/some_file"
+        use_sudo = False
 
         cstar.jobreader._parse(get_example_file(), filename, output_directory, job, job_id, stop_after, max_days,
                                endpoint_mapper=lambda x: {})
