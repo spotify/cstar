@@ -49,6 +49,7 @@ expressions ::= expression ',' expressions | expression
 from collections import namedtuple
 from cstar.exceptions import ParseException
 import re
+ipv6_addr_re = re.compile('^(?<![:.\w])(?:[a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}(?![:.\w])')
 
 Call = namedtuple("Call", "name arguments")
 
@@ -156,6 +157,16 @@ def _tokenize(original_line, offset=0):
         return ()
     if line[0] in {'(', ')', '[', ']', ',', ':'}:
         return (Symbol(line[0], offset),) + _tokenize(line[1:], offset + 1)
+
+    # Handle an ipv6 address .. the : mucks the tokenizer .. :(
+    results=ipv6_addr_re.search(line)
+    if results:
+        tok = results.group()
+        offset = results.span()[1]
+        line = line[offset:]
+        identifier = Identifier(tok, offset)
+        return (identifier,) + _tokenize(line, offset + 1)
+
     if line[0].isalnum() or line[0] in {'-'}:
         tok = ""
         while True:

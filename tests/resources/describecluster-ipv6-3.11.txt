@@ -1,0 +1,6 @@
+Cluster Information:
+    Name: c3111
+    Snitch: org.apache.cassandra.locator.DynamicEndpointSnitch
+    Partitioner: org.apache.cassandra.dht.Murmur3Partitioner
+    Schema versions:
+        d8210030-20a4-3f05-b2ef-ea154a6d8ef6: [127.0.0.1, 127.0.0.2, 127.0.0.3]
