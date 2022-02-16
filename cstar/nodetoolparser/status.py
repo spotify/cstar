@@ -14,6 +14,7 @@
 
 import socket
 import re
+import ipaddress
 
 from cstar.topology import Topology, Host
 
@@ -27,11 +28,22 @@ _rack_re = re.compile(r"^(?=.*)[\w -]+$")
 _keyspace_name_re = re.compile(r"^\s*Keyspace\s*:\s*(.*)$", re.MULTILINE)
 
 
+def is_ip(address):
+    try:
+        ip = ipaddress.ip_address(address)
+
+        if isinstance(ip, ipaddress.IPv4Address):
+            return True
+        elif isinstance(ip, ipaddress.IPv6Address):
+            return True
+    except ValueError:
+        return False
+
 def _parse_node(line):
     words = line.split()
     if len(words) == 8 \
         and re.match(_state_re, words[0]) \
-        and re.match(_ip_re, words[1]) \
+        and is_ip(words[1]) \
         and re.match(_tokens_re, words[4]) \
         and re.match(_host_id_re, words[6]) \
         and re.match(_rack_re, words[7]):

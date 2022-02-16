@@ -45,6 +45,11 @@ class NodetoolParserTest(unittest.TestCase):
             (name, schema_version) = cstar.nodetoolparser.parse_describe_cluster(nodetool_output)
             self.assertEqual(name, "c3111")
             self.assertEqual(schema_version, "d8210030-20a4-3f05-b2ef-ea154a6d8ef6")
+        with open("tests/resources/describecluster-ipv6-3.11.txt", 'r') as f:
+            nodetool_output = f.read()
+            (name, schema_version) = cstar.nodetoolparser.parse_describe_cluster(nodetool_output)
+            self.assertEqual(name, "c3111")
+            self.assertEqual(schema_version, "d8210030-20a4-3f05-b2ef-ea154a6d8ef6")
 
     def test_tokenize(self):
         with open("tests/resources/describering-2.2.txt", 'r') as f:
@@ -78,6 +83,13 @@ class NodetoolParserTest(unittest.TestCase):
             self.assertEqual(3, len(ast))
             self.assertEqual(ast[0].arguments['end_token'], -3074457345618258603)
             self.assertEqual(ast[1].arguments['endpoints'][1], "127.0.0.1")
+            self.assertEqual(ast[1].arguments['endpoint_details'][0].arguments['datacenter'], "datacenter1")
+            self.assertEqual(ast[1].arguments['endpoint_details'][0].arguments['rack'], "rack1")
+        with open("tests/resources/describering-ipv6-3.11.txt", 'r') as f:
+            ast = cstar.nodetoolparser.parse_nodetool_describering(f.read())
+            self.assertEqual(3, len(ast))
+            self.assertEqual(ast[0].arguments['end_token'], -3074457345618258603)
+            self.assertEqual(ast[1].arguments['endpoints'][1], "713c:85de:1dfa:b614:e219:1bde:28cf:d160")
             self.assertEqual(ast[1].arguments['endpoint_details'][0].arguments['datacenter'], "datacenter1")
             self.assertEqual(ast[1].arguments['endpoint_details'][0].arguments['rack'], "rack1")
 
@@ -130,7 +142,15 @@ class NodetoolParserTest(unittest.TestCase):
             self.assertEqual("-9223372036854775806", range_mapping[0]["startToken"])
             self.assertEqual("-9223372036854775806", range_mapping[2]["endToken"])
             self.assertEqual(['127.0.0.2', '127.0.0.3', '127.0.0.1'], range_mapping[0]["endpoints"])
-
+        with open("tests/resources/describering-ipv6-3.11.txt", 'r') as f:
+            describering = cstar.nodetoolparser.parse_nodetool_describering(f.read())
+            range_mapping = cstar.nodetoolparser.convert_describering_to_range_mapping(describering)
+            self.assertEqual(3,len(range_mapping))
+            self.assertEqual("-9223372036854775806", range_mapping[0]["startToken"])
+            self.assertEqual("-9223372036854775806", range_mapping[2]["endToken"])
+            self.assertEqual(['713c:85de:1dfa:b614:e219:1bde:28cf:d161',
+                              '713c:85de:1dfa:b614:e219:1bde:28cf:d162',
+                              '713c:85de:1dfa:b614:e219:1bde:28cf:d160'], range_mapping[0]["endpoints"])
     def test_parse_nodetool_status(self):
         with open("tests/resources/status-2.2.txt", 'r') as f:
             topology = cstar.nodetoolparser.parse_nodetool_status(f.read(), 'test_cluster', lambda _: None)
