@@ -1,5 +1,12 @@
 ## Change Log
 
+### 0.9.0 (2022/04/20 10:30 +00:00)
+- [dd5fb04](https://github.com/spotify/cstar/commit/dd5fb04b71e9d219953d3f0f7532f8145f499ea0) add sudo option (@eedgar)
+- [865f069](https://github.com/spotify/cstar/commit/865f06908739e6baccacaf9de4e1496b6d73160b) parse ipv6 tokens properly (@eedgar)
+- [f0e92c8](https://github.com/spotify/cstar/commit/f0e92c8212d0f67448eb221a5526f199c33c4c5c) Bump paramiko (@yakirgb)
+- [6172580](https://github.com/spotify/cstar/commit/6172580a3ceba091f9599df355c267f9ce22a99a) Add --jmx-passwordfile cli argument (@xtimon)
+- [8ccc437](https://github.com/spotify/cstar/commit/8ccc43761ad1d57001147d1a87ae8d2507344177) Correctly process --hosts-variables argument (@smarsching)
+
 ### 0.8.1 (2020/12/04 09:00 +00:00)
 - [a9bbc3d](https://github.com/spotify/cstar/commit/a9bbc3d8c8bed7d7b76d78358ee856b0805179a1) Fix error when continuing a job with the cache (@adejanovski)
 - [e7232d2](https://github.com/spotify/cstar/commit/e7232d28b0b938a50b8300aa89c1e4e177d0b8e3) Fix missing host_variables on resuming jobs with running hosts (@adejanovski)
