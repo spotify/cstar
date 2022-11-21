@@ -55,6 +55,9 @@ def main():
     else:
         namespace.jmx_password = None
 
+    if namespace.jmx_addlargs:
+        namespace.jmx_addlargs = namespace.jmx_addlargs.strip('\\')
+
     if bool(namespace.seed_host) + bool(namespace.host) + bool(namespace.host_file) != 1:
         error("Exactly one of --seed-host, --host and --host-file must be used", print_traceback=False)
 
@@ -110,6 +113,7 @@ def main():
             jmx_username=namespace.jmx_username,
             jmx_password=namespace.jmx_password,
             jmx_passwordfile=namespace.jmx_passwordfile,
+            jmx_addlargs=namespace.jmx_addlargs,
             resolve_hostnames=namespace.resolve_hostnames,
             hosts_variables=hosts_variables)
         job.run()

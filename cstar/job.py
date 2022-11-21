@@ -76,6 +76,7 @@ class Job(object):
         self.jmx_username = None
         self.jmx_password = None
         self.jmx_passwordfile = None
+        self.jmx_addlargs = None
         self.hosts_variables = dict()
         self.returned_jobs = list()
         self.schema_versions = list()
@@ -106,7 +107,6 @@ class Job(object):
         for host in seed_nodes:
             tried_hosts.append(host)
             conn = self._connection(host)
-
             describe_res = self.run_nodetool(conn, "describecluster")
             status_res = self.run_nodetool(conn, "status")
             if (describe_res.status == 0) and (status_res.status == 0):
@@ -240,6 +240,9 @@ class Job(object):
                 jmx_args.extend(["-pw", self.jmx_password])
             if self.jmx_passwordfile:
                 jmx_args.extend(["-pwf", self.jmx_passwordfile])
+            if self.jmx_addlargs:
+                split_jmx_addlargs=self.jmx_addlargs.split()
+                jmx_args.extend(split_jmx_addlargs)
 
         return conn.run((*sudo, "nodetool", *jmx_args, *cmds))
 
@@ -248,7 +251,7 @@ class Job(object):
               ignore_down_nodes, dc_filter,
               sleep_on_new_runner, sleep_after_done,
               ssh_username, ssh_password, ssh_identity_file, ssh_lib,
-              jmx_username, jmx_password, jmx_passwordfile, resolve_hostnames, hosts_variables):
+              jmx_username, jmx_password, jmx_passwordfile, jmx_addlargs, resolve_hostnames, hosts_variables):
 
         msg("Starting setup")
 
@@ -275,6 +278,7 @@ class Job(object):
         self.jmx_username = jmx_username
         self.jmx_password = jmx_password
         self.jmx_passwordfile = jmx_passwordfile
+        self.jmx_addlargs = jmx_addlargs
         self.resolve_hostnames = resolve_hostnames
         self.hosts_variables = hosts_variables
         if not os.path.exists(self.output_directory):

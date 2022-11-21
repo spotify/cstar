@@ -105,6 +105,7 @@
     "timeout": null,
     "jmx_username": null,
     "jmx_passwordfile": null,
+    "jmx_addlargs": null,
     "use_sudo": false,
     "version": 8,
     "hosts_variables": null

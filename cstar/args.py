@@ -103,6 +103,7 @@ def add_cstar_arguments(parser, commands, execute_command, execute_continue, exe
     _add_cstar_arguments_without_command(continue_parser)
     _add_ssh_arguments(continue_parser)
     _add_jmx_auth_arguments(continue_parser)
+    _add_raw_jmx_args(continue_parser)
 
     cleanup_parser = subparsers.add_parser('cleanup-jobs', help='Cleanup old finished jobs and exit (*)')
     cleanup_parser.set_defaults(func=execute_cleanup)
@@ -110,6 +111,7 @@ def add_cstar_arguments(parser, commands, execute_command, execute_continue, exe
     _add_cstar_arguments_without_command(cleanup_parser)
     _add_ssh_arguments(cleanup_parser)
     _add_jmx_auth_arguments(cleanup_parser)
+    _add_raw_jmx_args(cleanup_parser)
 
     for (name, command) in commands.items():
         command_parser = subparsers.add_parser(name, help=command.description)
@@ -120,6 +122,7 @@ def add_cstar_arguments(parser, commands, execute_command, execute_continue, exe
         _add_common_arguments(command_parser)
         _add_ssh_arguments(command_parser)
         _add_jmx_auth_arguments(command_parser)
+        _add_raw_jmx_args(command_parser)
         command_parser.set_defaults(func=lambda args: execute_command(args), command=command)
 
 
@@ -130,6 +133,7 @@ def add_cstarpar_arguments(parser):
     _add_strategy_arguments(parser)
     _add_ssh_arguments(parser)
     _add_jmx_auth_arguments(parser)
+    _add_raw_jmx_args(parser)
     parser.add_argument('command', help='Command to run once for each Cassandra host')
 
 def _add_ssh_arguments(parser):
@@ -140,3 +144,6 @@ def _add_ssh_arguments(parser):
 def _add_jmx_auth_arguments(parser):
     parser.add_argument('--jmx-username', help='JMX username', default=None)
     parser.add_argument('--jmx-passwordfile', help='JMX passwordfile', default=None)
+
+def _add_raw_jmx_args(parser):
+    parser.add_argument('--jmx-addlargs', help='Any additional JMX args', default=None)

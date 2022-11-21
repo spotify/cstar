@@ -142,6 +142,7 @@ def execute_command(args):
             jmx_username=args.jmx_username,
             jmx_password=args.jmx_password,
             jmx_passwordfile=args.jmx_passwordfile,
+            jmx_addlargs=args.jmx_addlargs,
             resolve_hostnames=args.resolve_hostnames,
             hosts_variables=hosts_variables)
         job.run()
@@ -223,6 +224,9 @@ def main():
         namespace.jmx_password = getpass.getpass(prompt="JMX Password ")
     else:
         namespace.jmx_password = None
+
+    if namespace.jmx_addlargs:
+        namespace.jmx_addlargs = namespace.jmx_addlargs.strip('\\')
 
     cstar.output.configure(namespace.verbose)
     namespace.func(namespace)
