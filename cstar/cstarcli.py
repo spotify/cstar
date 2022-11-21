@@ -142,6 +142,7 @@ def execute_command(args):
             jmx_username=args.jmx_username,
             jmx_password=args.jmx_password,
             jmx_passwordfile=args.jmx_passwordfile,
+            addl_jmx_args=args.jmx_addlargs,
             resolve_hostnames=args.resolve_hostnames,
             hosts_variables=hosts_variables)
         job.run()

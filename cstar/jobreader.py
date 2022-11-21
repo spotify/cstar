@@ -69,6 +69,7 @@ def _parse(input, file, output_directory, job, job_id, stop_after, max_days, end
     job.sudo_args = data['sudo_args']
     job.jmx_username = data['jmx_username']
     job.jmx_passwordfile = data['jmx_passwordfile']
+    job.addl_jmx_args = data['addl_jmx_args']
     job.hosts_variables = data['hosts_variables']
 
     strategy = cstar.strategy.parse(state['strategy'])

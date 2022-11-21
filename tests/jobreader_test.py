@@ -140,6 +140,7 @@ def get_example_file():
     "timeout": null,
     "jmx_username": null,
     "jmx_passwordfile": null,
+    "addl_jmx_args": null,
     "use_sudo": "false",
     "version": 8,
     "hosts_variables": null
