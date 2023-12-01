@@ -110,6 +110,7 @@ def main():
             jmx_username=namespace.jmx_username,
             jmx_password=namespace.jmx_password,
             jmx_passwordfile=namespace.jmx_passwordfile,
+            addl_jmx_args=namespace.jmx_addlargs,
             resolve_hostnames=namespace.resolve_hostnames,
             hosts_variables=hosts_variables)
         job.run()
