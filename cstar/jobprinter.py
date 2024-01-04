@@ -64,6 +64,8 @@ def print_progress(original_topology, progress, down, printer=cstar.output.print
                 status = splitStatus[0] + "\n" + splitStatus[1] + "\n" + splitStatus[2]
             lines.append(status)
     lines.append("%d done, %d failed, %d executing" % (len(progress.done), len(progress.failed), len(progress.running)))
+    if len(progress.running):
+        lines.append("executing: " + " ".join([x.ip for x in progress.running]))
     printer("\n".join(lines))
 
 def chunks(l, n):
